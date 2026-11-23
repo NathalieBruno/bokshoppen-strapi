@@ -1,10 +1,10 @@
 # 📚 Lilla Bokshoppen
 
-En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem i en önskelista.
+En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem som sparade böcker.
 
 ## Syfte
 
-Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan användas som backend för en egen frontend. Administratören lägger in och ändrar böcker och tema i Strapi, medan besökare kan betygsätta böckerna och spara dem i sin önskelista.
+Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan användas som backend för en egen frontend. Administratören lägger in och ändrar böcker och tema i Strapi, medan besökare kan betygsätta böckerna och spara dem som sparade böcker.
 
 ## Funktioner
 
@@ -13,6 +13,7 @@ Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan anv
 - ⭐ Betygsätt böcker (1–10)
 - 🔖 Önskelista med möjlighet att ta bort böcker
 - 🔤 Sortering efter titel, författare och betyg på profilsidan
+- ✅ Markera en sparad bok som läst (den betygsätts och flyttas till dina lästa och betygsatta böcker) och ta bort den därifrån igen (betyget raderas)
 - 🎨 Tre teman (vår, sommar, höst)
 
 ## Tech stack
@@ -33,7 +34,7 @@ Samma frontend kan köras på två sätt:
 | **Data**                 | Hämtas från Strapi (`localhost:1337`) | Fast katalog med 12 böcker i `frontend/demo/`                      |
 | **Böcker och tema**      | Ändras av administratören i Strapi    | Böckerna är fasta, temat byter besökaren själv längst ned på sidan |
 | **Konto**                | Riktig registrering och inloggning    | Knappen **Try demo account**                                       |
-| **Betyg och önskelista** | Sparas i Strapi                       | Sparas bara i din egen webbläsare                                  |
+| **Betyg och sparade böcker** | Sparas i Strapi                       | Sparas bara i din egen webbläsare                                  |
 
 Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du det med `?demo=1` (demo utan Strapi) eller `?demo=0` (tvinga Strapi). Inställningar för Netlify finns i `netlify.toml`.
 
@@ -44,7 +45,7 @@ Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du de
 1. 🔑 Klicka på **Logga in** och sedan **Try demo account** – du behöver inga uppgifter.
 2. ⭐ Betygsätt en bok i listan.
 3. 🔖 Klicka på **Läs senare** för att spara en bok.
-4. 👤 Öppna **Min profil** och prova att sortera din önskelista och dina betyg.
+4. 👤 Öppna **Min profil** och prova att sortera dina sparade böcker och dina betyg.
 5. 🎨 Byt tema längst ned på sidan (**Vår**, **Sommar**, **Höst**).
 
 ## 💻 Köra projektet lokalt (med Strapi)
@@ -78,7 +79,7 @@ sass frontend/style/style.scss frontend/style/style.css
 
 ```
 book-ducks-uppgift/
-├── backend/          🗄️ Strapi CMS (böcker, betyg, önskelistor, tema)
+├── backend/          🗄️ Strapi CMS (böcker, betyg, sparade böcker, tema)
 ├── frontend/         🖥️ Webbplatsen
 │   ├── index.html    🏠 Startsida
 │   ├── user/         👤 Profilsida
