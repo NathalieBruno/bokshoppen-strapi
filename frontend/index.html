@@ -47,49 +47,57 @@
     </main>
 
     <dialog id="login-modal" class="modal" aria-labelledby="login-title">
-      <div class="modal-content">
+      <div class="modal-inner">
         <button type="button" class="close" aria-label="Stäng">&times;</button>
         <h2 id="login-title">Logga in</h2>
-        <form id="login-form">
+        <p class="modal-sub">Välkommen tillbaka till bokklubben.</p>
+        <form id="login-form" novalidate>
           <div class="form-group">
             <label for="email">E-post</label>
-            <input type="email" id="email" placeholder="Din e-post" required autofocus />
+            <input type="email" id="email" autocomplete="email" required autofocus aria-describedby="email-error"
+              data-error-required="Fyll i din e-postadress." data-error-invalid="Ange en giltig e-postadress." />
+            <p class="field-error" id="email-error" hidden></p>
           </div>
           <div class="form-group">
             <label for="password">Lösenord</label>
-            <input type="password" id="password" placeholder="Ditt lösenord" required />
+            <input type="password" id="password" autocomplete="current-password" required aria-describedby="password-error"
+              data-error-required="Fyll i ditt lösenord." />
+            <p class="field-error" id="password-error" hidden></p>
           </div>
           <p class="forgot-password"><a href="#">Glömt ditt lösenord?</a></p>
-          <button type="submit" class="btn btn-primary">Logga in</button>
+          <button type="submit" class="btn btn-primary btn-block">Logga in</button>
         </form>
-        <div class="modal-footer">
-          <p>Är du ny här? <a href="#" id="show-register">Registrera dig</a></p>
-        </div>
+        <p class="modal-footer">Ny här? <button type="button" class="link-btn" id="show-register">Skapa ett konto</button></p>
       </div>
     </dialog>
 
     <dialog id="register-modal" class="modal" aria-labelledby="register-title">
-      <div class="modal-content">
+      <div class="modal-inner">
         <button type="button" class="close" aria-label="Stäng">&times;</button>
-        <h2 id="register-title">Skapa ett nytt konto</h2>
-        <form id="register-form">
+        <h2 id="register-title">Skapa konto</h2>
+        <p class="modal-sub">Det tar en minut. Sedan kan du betygsätta och spara böcker.</p>
+        <form id="register-form" novalidate>
           <div class="form-group">
             <label for="register-username">Användarnamn</label>
-            <input type="text" id="register-username" placeholder="Välj ett användarnamn" required autofocus />
+            <input type="text" id="register-username" autocomplete="username" required autofocus aria-describedby="register-username-error"
+              data-error-required="Välj ett användarnamn." />
+            <p class="field-error" id="register-username-error" hidden></p>
           </div>
           <div class="form-group">
             <label for="register-email">E-post</label>
-            <input type="email" id="register-email" placeholder="Din e-post" required />
+            <input type="email" id="register-email" autocomplete="email" required aria-describedby="register-email-error"
+              data-error-required="Fyll i din e-postadress." data-error-invalid="Ange en giltig e-postadress." />
+            <p class="field-error" id="register-email-error" hidden></p>
           </div>
           <div class="form-group">
             <label for="register-password">Lösenord</label>
-            <input type="password" id="register-password" placeholder="Välj ett lösenord" required />
+            <input type="password" id="register-password" autocomplete="new-password" required aria-describedby="register-password-error"
+              data-error-required="Välj ett lösenord." />
+            <p class="field-error" id="register-password-error" hidden></p>
           </div>
-          <button type="submit" class="btn btn-primary">Registrera</button>
+          <button type="submit" class="btn btn-primary btn-block">Skapa konto</button>
         </form>
-        <div class="modal-footer">
-          <p>Har du redan ett konto? <a href="#" id="show-login">Logga in</a></p>
-        </div>
+        <p class="modal-footer">Har du redan ett konto? <button type="button" class="link-btn" id="show-login">Logga in</button></p>
       </div>
     </dialog>
   </body>

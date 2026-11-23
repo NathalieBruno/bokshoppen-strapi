@@ -3,6 +3,7 @@ import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { el } from "./dom.js";
 import { openModal, closeModal, closeOnBackdropClick } from "./components/modal.js";
+import { validateForm, clearErrorsOnInput } from "./components/formErrors.js";
 
 function initModals() {
   let loginBtn = document.getElementById("login-btn");
@@ -59,14 +60,15 @@ const addDemoLoginButton = () => {
   const loginForm = document.getElementById("login-form");
   if (!DEMO_MODE || !loginForm || document.getElementById("demo-login-btn")) return;
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "demo-login";
-  wrapper.innerHTML = `
-    <button type="button" id="demo-login-btn" class="btn btn-primary">Try demo account</button>
-    <p class="demo-hint">Demoversion – ingen server behövs. Dina betyg och önskelista sparas bara i din webbläsare.</p>
-  `;
+  const wrapper = el("div", "demo-login");
+  const demoButton = el("button", "btn btn-block", "Prova demokontot", { type: "button", id: "demo-login-btn" });
+  wrapper.append(
+    el("div", "divider", "eller", { "aria-hidden": "true" }),
+    demoButton,
+    el("p", "demo-hint", "Demoversion. Dina betyg och din önskelista sparas bara i din webbläsare.")
+  );
   loginForm.after(wrapper);
-  wrapper.querySelector("#demo-login-btn").addEventListener("click", handleDemoLogin);
+  demoButton.addEventListener("click", handleDemoLogin);
 };
 
 const handleDemoLogin = async () => {
@@ -94,12 +96,17 @@ const addDemoBadge = () => {
 const authForms = () => {
   let loginForm = document.getElementById("login-form");
   let registerForm = document.getElementById("register-form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", handleLogin);
-  }
-  if (registerForm) {
-    registerForm.addEventListener("submit", handleRegister);
-  }
+  [
+    [loginForm, handleLogin],
+    [registerForm, handleRegister],
+  ].forEach(([form, handler]) => {
+    if (!form) return;
+    clearErrorsOnInput(form);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (validateForm(form)) handler(e);
+    });
+  });
 };
 
 const handleLogin = async (e) => {
