@@ -1,4 +1,4 @@
-import { Api, BASE_URL, API_URL } from "./api.js";
+import { Api, imageUrl } from "./api.js";
 import { applyTheme } from "./theme.js";
 
 await Api.isLoggedIn();
@@ -26,7 +26,7 @@ const createBookCard = async (book) => {
 
   card.innerHTML = `
     <div class="book-cover-container">
-      <img src="${BASE_URL}${book.image?.url}" class="book-cover">
+      <img src="${imageUrl(book)}" class="book-cover">
     </div>
     <div class="book-info">
       <h3 class="book-title">${book.title}</h3>

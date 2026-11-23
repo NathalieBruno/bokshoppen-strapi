@@ -1,4 +1,4 @@
-import { Api, BASE_URL } from "./api.js";
+import { Api, DEMO_MODE, isHomePage, pageUrl } from "./api.js";
 import { applyTheme } from "./theme.js";
 
 function initModals() {
@@ -59,7 +59,45 @@ function initModals() {
   });
 
   authForms();
+  addDemoLoginButton();
 }
+
+// Demoläge: knapp som loggar in direkt som demoanvändare (ingen Strapi behövs).
+const addDemoLoginButton = () => {
+  const loginForm = document.getElementById("login-form");
+  if (!DEMO_MODE || !loginForm || document.getElementById("demo-login-btn")) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "demo-login";
+  wrapper.innerHTML = `
+    <button type="button" id="demo-login-btn" class="btn btn-primary">Try demo account</button>
+    <p class="demo-hint">Demoversion – ingen server behövs. Dina betyg och önskelista sparas bara i din webbläsare.</p>
+  `;
+  loginForm.after(wrapper);
+  wrapper.querySelector("#demo-login-btn").addEventListener("click", handleDemoLogin);
+};
+
+const handleDemoLogin = async () => {
+  const data = await Api.login();
+  sessionStorage.setItem("token", data.jwt);
+  sessionStorage.setItem("user", JSON.stringify(data.user));
+  document.getElementById("login-modal").style.display = "none";
+  userUI(data.user);
+  toastr.success("Du är nu inloggad med demokontot - välkommen!");
+  setTimeout(() => {
+    location.reload();
+  }, 1500);
+};
+
+const addDemoBadge = () => {
+  const header = document.querySelector("header");
+  if (!DEMO_MODE || !header || header.querySelector(".demo-badge")) return;
+  const badge = document.createElement("span");
+  badge.className = "demo-badge";
+  badge.textContent = "Demo";
+  badge.title = "Demoversion – innehållet är en fast katalog och körs utan Strapi-server";
+  header.querySelector("h1")?.append(badge);
+};
 
 const authForms = () => {
   let loginForm = document.getElementById("login-form");
@@ -138,9 +176,9 @@ const userUI = (user) => {
   if (userControls) {
     userControls.innerHTML = `
             ${
-              window.location.pathname === "/index.html"
-                ? `<span>Välkommen till bokklubben <strong>${user.username}</strong>!</span> <a href="user/profile.html" class="btn btn-primary">Min profil</a>`
-                : `<span><strong>${user.username}</strong>´s profilsida</span> <a href="/index.html" class="btn btn-primary">Till förstasidan</a>`
+              isHomePage()
+                ? `<span>Välkommen till bokklubben <strong>${user.username}</strong>!</span> <a href="${pageUrl("user/profile.html")}" class="btn btn-primary">Min profil</a>`
+                : `<span><strong>${user.username}</strong>´s profilsida</span> <a href="${pageUrl("index.html")}" class="btn btn-primary">Till förstasidan</a>`
             }
             <button id="logout-btn" class="btn btn-primary">Logga ut</button>
         `;
@@ -156,4 +194,5 @@ const userUI = (user) => {
 document.addEventListener("DOMContentLoaded", () => {
   checkLogin();
   applyTheme();
+  addDemoBadge();
 });

@@ -1,4 +1,4 @@
-import { Api, BASE_URL } from "../api.js";
+import { Api, imageUrl } from "../api.js";
 import { applyTheme } from "../theme.js";
 
 await Api.isLoggedIn();
@@ -20,13 +20,9 @@ let userRatings = [];
 let originalRatings = [];
 
 const getUserWishlist = async () => {
-  const response = await axios.get(`${BASE_URL}/api/users/me?pLevel=4`, {
-    headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-    },
-  });
+  const me = await Api.getMeWithWishlist();
 
-  userWishlist = response.data.wishlists;
+  userWishlist = me.wishlists;
 
   return { wishlist: userWishlist };
 };
@@ -133,7 +129,7 @@ const createBookCard = (book) => {
   card.className = "book-card logged-in";
   card.innerHTML = `
       <div class="book-cover-container">
-        <img src="${BASE_URL}${book.book.image?.url}"class="book-cover">
+        <img src="${imageUrl(book.book)}" class="book-cover">
       </div>
       <div class="book-info">
         <h3 class="book-title">${book.book.title}</h3>
@@ -182,7 +178,7 @@ const createRatingCard = (ratingData) => {
   card.className = "book-card logged-in";
   card.innerHTML = `
       <div class="book-cover-container">
-        <img src="${BASE_URL}${book.image?.url}" class="book-cover">
+        <img src="${imageUrl(book)}" class="book-cover">
       </div>
       <div class="book-info">
         <h3 class="book-title">${book.title}</h3>

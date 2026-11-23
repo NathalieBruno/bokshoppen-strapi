@@ -1,0 +1,239 @@
+{
+  "books": [
+    {
+      "id": 8,
+      "documentId": "wr2g2yglfvjtjr833mzlkpvd",
+      "title": "Under en rosa himmel",
+      "author": "Jenny Colgan",
+      "pages": 364,
+      "publicationDate": "2025-04-09",
+      "image": {
+        "url": "demo/images/under_en_rosa_himmel_e244c15291.jpg"
+      }
+    },
+    {
+      "id": 14,
+      "documentId": "x6rpxbv68acvwdvwqjczxluy",
+      "title": "Det lilla bageriet på strandpromenaden",
+      "author": "Jenny Colgan",
+      "pages": 421,
+      "publicationDate": "2018-05-18",
+      "image": {
+        "url": "demo/images/det_lilla_bageriet_pa_strandpromenaden_2e3a61c5c3.jpg"
+      }
+    },
+    {
+      "id": 15,
+      "documentId": "dwkhyo063cugmrn9nh9q5ylk",
+      "title": "En avlägsen kust",
+      "author": "Jenny Colgan",
+      "pages": 181,
+      "publicationDate": "2016-01-14",
+      "image": {
+        "url": "demo/images/en_avlagsen_kust_038df99a93.jpg"
+      }
+    },
+    {
+      "id": 17,
+      "documentId": "c0ulbymoqbdm6k6f7nkjtc9m",
+      "title": "Kite Runner",
+      "author": "Khaled Hosseini",
+      "pages": 368,
+      "publicationDate": "2018-08-23",
+      "image": {
+        "url": "demo/images/kite_runner_3137cd86ae.jpg"
+      }
+    },
+    {
+      "id": 19,
+      "documentId": "qptutqs7fn5y0rn24wpxt3l3",
+      "title": "A Thousand Splendid Suns ",
+      "author": "Khaled Hosseini",
+      "pages": 432,
+      "publicationDate": "2018-05-18",
+      "image": {
+        "url": "demo/images/thousand_splendid_suns_2ae5386c62.jpg"
+      }
+    },
+    {
+      "id": 21,
+      "documentId": "e1shfl3wwokb2iv4d03ccb47",
+      "title": "Principles",
+      "author": "Ray Dalio",
+      "pages": 592,
+      "publicationDate": "2016-05-18",
+      "image": {
+        "url": "demo/images/principles_14ed2c889d.jpg"
+      }
+    },
+    {
+      "id": 23,
+      "documentId": "togjrxhp1syg3uzfywm9q3zc",
+      "title": "5 AM Club",
+      "author": "Robin Sharma",
+      "pages": 336,
+      "publicationDate": "2016-05-18",
+      "image": {
+        "url": "demo/images/5_am_club_e0481aea9a.jpg"
+      }
+    },
+    {
+      "id": 27,
+      "documentId": "n1nt81wzmaviowrkmx32j60z",
+      "title": "Munken som sålde sin Ferrari",
+      "author": "Robin Sharma",
+      "pages": 204,
+      "publicationDate": "2007-04-09",
+      "image": {
+        "url": "demo/images/monk_who_sold_his_ferrari_432676c2d8.jpg"
+      }
+    },
+    {
+      "id": 31,
+      "documentId": "v4n6d4utddb0mv1tbank83qd",
+      "title": "Konsten att höra hjärtslag",
+      "author": "Jan-Philipp Sendker",
+      "pages": 334,
+      "publicationDate": "2023-02-09",
+      "image": {
+        "url": "demo/images/konsten_att_hora_hjartslag_e5de6b6322.jpg"
+      }
+    },
+    {
+      "id": 33,
+      "documentId": "aufnw88flar17jliq0cyc3q6",
+      "title": "Hjärtats minnen",
+      "author": "Jan-Philipp Sendker",
+      "pages": 328,
+      "publicationDate": "2025-03-17",
+      "image": {
+        "url": "demo/images/hjartats_minnen_beeac76042.jpg"
+      }
+    },
+    {
+      "id": 35,
+      "documentId": "n884nl5jxqijqs6mya9fdxw0",
+      "title": "The Gentleman From Peru",
+      "author": "André Aciman",
+      "pages": 364,
+      "publicationDate": "2016-06-18",
+      "image": {
+        "url": "demo/images/the_gentleman_from_peru_3c6249f74c.jpg"
+      }
+    },
+    {
+      "id": 36,
+      "documentId": "bgkh37bige133ym92pnpgbd0",
+      "title": "POWER OF NOW",
+      "author": "Tolle Eckhart",
+      "pages": 251,
+      "publicationDate": "2019-05-20",
+      "image": {
+        "url": "demo/images/power_of_now_679f24f021.jpg"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "rating": 5,
+      "book": "dwkhyo063cugmrn9nh9q5ylk"
+    },
+    {
+      "rating": 5,
+      "book": "dwkhyo063cugmrn9nh9q5ylk"
+    },
+    {
+      "rating": 8,
+      "book": "x6rpxbv68acvwdvwqjczxluy"
+    },
+    {
+      "rating": 8,
+      "book": "x6rpxbv68acvwdvwqjczxluy"
+    },
+    {
+      "rating": 10,
+      "book": "e1shfl3wwokb2iv4d03ccb47"
+    },
+    {
+      "rating": 10,
+      "book": "e1shfl3wwokb2iv4d03ccb47"
+    },
+    {
+      "rating": 5,
+      "book": "n1nt81wzmaviowrkmx32j60z"
+    },
+    {
+      "rating": 5,
+      "book": "n1nt81wzmaviowrkmx32j60z"
+    },
+    {
+      "rating": 6,
+      "book": "n884nl5jxqijqs6mya9fdxw0"
+    },
+    {
+      "rating": 6,
+      "book": "n884nl5jxqijqs6mya9fdxw0"
+    },
+    {
+      "rating": 5,
+      "book": "x6rpxbv68acvwdvwqjczxluy"
+    },
+    {
+      "rating": 5,
+      "book": "x6rpxbv68acvwdvwqjczxluy"
+    },
+    {
+      "rating": 5,
+      "book": "wr2g2yglfvjtjr833mzlkpvd"
+    },
+    {
+      "rating": 5,
+      "book": "wr2g2yglfvjtjr833mzlkpvd"
+    },
+    {
+      "rating": 2,
+      "book": "aufnw88flar17jliq0cyc3q6"
+    },
+    {
+      "rating": 2,
+      "book": "aufnw88flar17jliq0cyc3q6"
+    },
+    {
+      "rating": 9,
+      "book": "v4n6d4utddb0mv1tbank83qd"
+    },
+    {
+      "rating": 9,
+      "book": "v4n6d4utddb0mv1tbank83qd"
+    },
+    {
+      "rating": 7,
+      "book": "wr2g2yglfvjtjr833mzlkpvd"
+    },
+    {
+      "rating": 7,
+      "book": "wr2g2yglfvjtjr833mzlkpvd"
+    },
+    {
+      "rating": 7,
+      "book": "bgkh37bige133ym92pnpgbd0"
+    },
+    {
+      "rating": 7,
+      "book": "bgkh37bige133ym92pnpgbd0"
+    },
+    {
+      "rating": 10,
+      "book": "x6rpxbv68acvwdvwqjczxluy"
+    },
+    {
+      "rating": 10,
+      "book": "x6rpxbv68acvwdvwqjczxluy"
+    }
+  ],
+  "theme": {
+    "IsSpring": false,
+    "IsAutumn": false,
+    "IsSummer": true
+  }
+}
