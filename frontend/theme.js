@@ -48,28 +48,33 @@ const paintTheme = (key) => {
   document.body.style.backgroundColor = THEMES[key].color;
   document.body.style.backgroundImage = THEMES[key].pattern;
   document.querySelectorAll(".theme-switcher button").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.theme === key);
+    btn.setAttribute("aria-pressed", String(btn.dataset.theme === key));
   });
 };
 
 const addThemeSwitcher = () => {
-  if (document.querySelector(".theme-switcher")) return;
-  const switcher = document.createElement("div");
-  switcher.className = "theme-switcher";
-  switcher.innerHTML = `
-    <span class="theme-switcher-label">Tema</span>
-    ${Object.keys(THEMES)
-      .map((key) => `<button type="button" data-theme="${key}">${THEME_LABELS[key]}</button>`)
-      .join("")}
-    <span class="theme-switcher-note">Styrs normalt via Strapi CMS</span>
+  if (document.querySelector(".site-footer")) return;
+  const footer = document.createElement("footer");
+  footer.className = "site-footer";
+  footer.innerHTML = `
+    <div class="theme-switcher" role="group" aria-labelledby="theme-switcher-label">
+      <span class="theme-switcher-label" id="theme-switcher-label">Tema</span>
+      <span class="theme-switcher-options">
+        ${Object.keys(THEMES)
+          .map((key) => `<button type="button" data-theme="${key}" aria-pressed="false">${THEME_LABELS[key]}</button>`)
+          .join("")}
+      </span>
+      <span class="theme-switcher-note">Demoversion – temat styrs normalt via Strapi CMS.</span>
+    </div>
   `;
-  switcher.addEventListener("click", (e) => {
+  footer.addEventListener("click", (e) => {
     const key = e.target.dataset?.theme;
     if (!THEMES[key]) return;
     setDemoThemeChoice(key);
     paintTheme(key);
   });
-  document.body.append(switcher);
+  document.body.classList.add("has-site-footer");
+  document.body.append(footer);
 };
 
 const applyTheme = async () => {
