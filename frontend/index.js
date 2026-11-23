@@ -16,16 +16,23 @@ const loadBooks = async () => {
   const container = document.getElementById("books-container");
   container.innerHTML = "";
 
-  books.forEach(async (item) => {
-    container.append(await createBookCard(item));
-  });
+  // Korten byggs parallellt men läggs in i boklistans ordning (inte i den ordning svaren kommer).
+  const cards = await Promise.all(books.map(createBookCard));
+  container.append(...cards);
 };
 
 const createBookCard = async (book) => {
-  const avgRating = await Api.getBookRating(book.documentId);
-  const card = document.createElement("div");
   const token = Api.getAuthHeader();
   const isLoggedIn = !!token;
+  const user = isLoggedIn ? JSON.parse(sessionStorage.getItem("user")) : null;
+
+  // Alla anrop för kortet startas samtidigt i stället för ett i taget.
+  const [avgRating, userRating, alreadyInWishlist] = await Promise.all([
+    Api.getBookRating(book.documentId),
+    isLoggedIn ? Api.getUserBookRating(user.documentId, book.documentId) : null,
+    isLoggedIn ? Api.checkWishlist(user.documentId, book.documentId) : false,
+  ]);
+  const card = document.createElement("div");
   card.className = isLoggedIn ? "book-card logged-in" : "book-card logged-out";
 
   const cover = el("div", "book-cover-container");
@@ -43,7 +50,6 @@ const createBookCard = async (book) => {
   card.append(cover, info, el("div", "rating-section-container"), el("div", "button-container"));
 
   if (token) {
-    const user = JSON.parse(sessionStorage.getItem("user"));
     const buttonContainer = card.querySelector(".button-container");
     const ratingContainer = document.createElement("div");
     ratingContainer.className = "rating-container";
@@ -66,7 +72,6 @@ const createBookCard = async (book) => {
       </div>
     `;
 
-    const userRating = await Api.getUserBookRating(user.documentId, book.documentId);
     if (userRating) {
       ratingContainer.querySelector(".rating-select").value = userRating.rating;
     }
@@ -88,7 +93,6 @@ const createBookCard = async (book) => {
     const ratingSectionContainer = card.querySelector(".rating-section-container");
     ratingSectionContainer.append(ratingContainer);
     const wishlistBtn = document.createElement("button");
-    const alreadyInWishlist = await Api.checkWishlist(user.documentId, book.documentId);
 
     if (alreadyInWishlist) {
       wishlistBtn.textContent = "Boken är sparad";
