@@ -8,6 +8,9 @@ toastr.options = {
   toastClass: "toast toast--custom",
 };
 
+// Samma text används vid första rendering och när snittbetyget uppdateras efter en röst.
+const formatAvgRating = (avgRating) => `Snittbetyg: ⭐ ${avgRating > 0 ? `${avgRating}/10` : "Saknar betyg"}`;
+
 const loadBooks = async () => {
   const books = await Api.getBooks();
   const container = document.getElementById("books-container");
@@ -34,7 +37,7 @@ const createBookCard = async (book) => {
     el("p", "book-author", book.author),
     el("p", "book-details", `Sidor: ${book.pages}`),
     el("p", "book-details", `Publicerad: ${book.publicationDate}`),
-    el("p", "book-rating", `Snittbetyg: ⭐ ${avgRating > 0 ? `${avgRating}/10` : "Saknar betyg"}`)
+    el("p", "book-rating", formatAvgRating(avgRating))
   );
 
   card.append(cover, info, el("div", "rating-section-container"), el("div", "button-container"));
@@ -75,9 +78,7 @@ const createBookCard = async (book) => {
         if (success) {
           toastr.success("Betyg sparat!");
           const newAvgRating = await Api.getBookRating(book.documentId);
-          card.querySelector(".book-rating").textContent = `⭐ ${
-            newAvgRating > 0 ? `${newAvgRating}/10` : "Saknar betyg"
-          }`;
+          card.querySelector(".book-rating").textContent = formatAvgRating(newAvgRating);
         } else {
           toastr.error("Kunde inte spara betyg");
         }
