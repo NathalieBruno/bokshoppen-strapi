@@ -405,24 +405,24 @@ a {
     gap: 1.25rem;
   }
   .book-card {
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: clamp(6.5rem, 30vw, 9rem) minmax(0, 1fr);
+    align-content: start;
   }
   .book-cover-container {
-    flex: 0 0 9rem;
     align-items: start;
     padding: 1rem;
   }
   .book-info {
-    flex: 1 1 11rem;
     padding: 1rem 1rem 1.25rem 1.25rem;
   }
   .book-title {
     font-size: 1.3125rem;
+    overflow-wrap: anywhere;
   }
   .rating-section-container,
   .button-container {
-    flex: 1 0 100%;
+    grid-column: 1/-1;
     padding: 0 1rem 0.75rem;
   }
   .button-container {
