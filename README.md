@@ -1,20 +1,10 @@
-# 📚 Book Ducks – Lilla Bokshoppen
+# 📚 Lilla Bokshoppen
 
-En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem i en önskelista. Innehållet hanteras i **Strapi CMS** och sidan är byggd med vanlig HTML, CSS och JavaScript.
+En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem i en önskelista.
 
-## 🚀 Testa demon
+## 🎯 Syfte
 
-Demon körs på Netlify **utan** Strapi-server:
-
-🌐 **Live demo:** _(lägg in Netlify-länken här)_
-
-1. 🔑 Klicka på **Logga in** och sedan **Try demo account** – du behöver inga uppgifter.
-2. ⭐ Betygsätt en bok i listan.
-3. 🔖 Klicka på **Läs senare** för att spara en bok.
-4. 👤 Öppna **Min profil** och prova att sortera din önskelista och dina betyg.
-5. 🎨 Byt tema längst ned på sidan (**Vår**, **Sommar**, **Höst**).
-
-> 💡 I demon är böckerna en fast katalog med 12 titlar. Dina betyg, din önskelista och ditt temaval sparas bara i din egen webbläsare.
+Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan användas som backend för en egen frontend. Administratören lägger in och ändrar böcker och tema i Strapi, medan besökare kan betygsätta böckerna och spara dem i sin önskelista.
 
 ## ✨ Funktioner
 
@@ -23,16 +13,39 @@ Demon körs på Netlify **utan** Strapi-server:
 - ⭐ Betygsätt böcker (1–10)
 - 🔖 Önskelista med möjlighet att ta bort böcker
 - 🔤 Sortering efter titel, författare och betyg på profilsidan
-- 🎨 Tre teman (vår, sommar, höst) som normalt styrs från Strapi CMS
+- 🎨 Tre teman (vår, sommar, höst)
 
-## 🛠️ Teknik
+## 🛠️ Tech stack
 
-| | |
-|---|---|
-| 🖥️ Frontend | HTML, SCSS/CSS, JavaScript (ES-moduler) |
-| 🗄️ Backend / CMS | Strapi 5 med SQLite |
-| 📦 Bibliotek (via CDN) | axios, jQuery, Toastr |
-| ☁️ Hosting av demon | Netlify |
+|                        |                                         |
+| ---------------------- | --------------------------------------- |
+| 🖥️ Frontend            | HTML, SCSS/CSS, JavaScript (ES-moduler) |
+| 🗄️ Backend / CMS       | Strapi 5 med SQLite                     |
+| 📦 Bibliotek (via CDN) | axios, jQuery, Toastr                   |
+| ☁️ Hosting av demon    | Netlify                                 |
+
+## 🔀 Strapi lokalt eller demo
+
+Samma frontend kan köras på två sätt:
+
+|                          | 💻 Lokalt med Strapi                 | ☁️ Demo på Netlify                                                 |
+| ------------------------ | ------------------------------------ | ------------------------------------------------------------------ |
+| **Data**                 | Hämtas från Strapi (`localhost:1337`) | Fast katalog med 12 böcker i `frontend/demo/`                      |
+| **Böcker och tema**      | Ändras av administratören i Strapi   | Böckerna är fasta, temat byter besökaren själv längst ned på sidan |
+| **Konto**                | Riktig registrering och inloggning   | Knappen **Try demo account**                                       |
+| **Betyg och önskelista** | Sparas i Strapi                      | Sparas bara i din egen webbläsare                                  |
+
+Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du det med `?demo=1` (demo utan Strapi) eller `?demo=0` (tvinga Strapi). Inställningar för Netlify finns i `netlify.toml`.
+
+## 🚀 Testa demon
+
+🌐 **Live demo:** [book-store-strapi.netlify.app](https://book-store-strapi.netlify.app/)
+
+1. 🔑 Klicka på **Logga in** och sedan **Try demo account** – du behöver inga uppgifter.
+2. ⭐ Betygsätt en bok i listan.
+3. 🔖 Klicka på **Läs senare** för att spara en bok.
+4. 👤 Öppna **Min profil** och prova att sortera din önskelista och dina betyg.
+5. 🎨 Byt tema längst ned på sidan (**Vår**, **Sommar**, **Höst**).
 
 ## 💻 Köra projektet lokalt (med Strapi)
 
@@ -47,22 +60,11 @@ npm install
 npm run develop
 ```
 
-Strapi startar på `http://localhost:1337`. Första gången skapar du ett adminkonto, lägger in böcker och ställer in behörigheter under *Settings → Users & Permissions*.
+Strapi startar på `http://localhost:1337`. Första gången skapar du ett adminkonto, lägger in böcker och ställer in behörigheter under _Settings → Users & Permissions_.
 
 **2. Starta frontend** 🖥️
 
 Öppna projektmappen i VS Code och starta **Live Server** på `frontend/index.html`.
-
-Lokalt används Strapi automatiskt. Vill du prova demoläget utan Strapi lägger du till `?demo=1` i adressen, och `?demo=0` för att tvinga Strapi-läget.
-
-## ☁️ Publicera på Netlify
-
-Inställningarna finns i `netlify.toml`:
-
-- **Publish directory:** `frontend`
-- **Build command:** ingen (sidan är statisk)
-
-Demoläget slås på automatiskt när sidan inte körs lokalt.
 
 ## 📁 Struktur
 
