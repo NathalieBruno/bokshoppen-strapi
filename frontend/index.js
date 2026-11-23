@@ -1,26 +1,23 @@
-import { Api, imageUrl } from "./api.js";
+import { Api } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
-import { el } from "./dom.js";
+import { createBookCard, formatAvgRating } from "./components/bookCard.js";
 
 await Api.isLoggedIn();
 
-// Samma text används vid första rendering och när snittbetyget uppdateras efter en röst.
-const formatAvgRating = (avgRating) => `Snittbetyg: ⭐ ${avgRating > 0 ? `${avgRating}/10` : "Saknar betyg"}`;
-
+// Controller för startsidan: hämtar data via Api, låter bookCard rendera och kopplar ihop händelser.
 const loadBooks = async () => {
   const books = await Api.getBooks();
   const container = document.getElementById("books-container");
   container.innerHTML = "";
 
   // Korten byggs parallellt men läggs in i boklistans ordning (inte i den ordning svaren kommer).
-  const cards = await Promise.all(books.map(createBookCard));
+  const cards = await Promise.all(books.map(buildCard));
   container.append(...cards);
 };
 
-const createBookCard = async (book) => {
-  const token = Api.getAuthHeader();
-  const isLoggedIn = !!token;
+const buildCard = async (book) => {
+  const isLoggedIn = !!Api.getAuthHeader();
   const user = isLoggedIn ? JSON.parse(sessionStorage.getItem("user")) : null;
 
   // Alla anrop för kortet startas samtidigt i stället för ett i taget.
@@ -29,28 +26,29 @@ const createBookCard = async (book) => {
     isLoggedIn ? Api.getUserBookRating(user.documentId, book.documentId) : null,
     isLoggedIn ? Api.checkWishlist(user.documentId, book.documentId) : false,
   ]);
-  const card = document.createElement("div");
-  card.className = isLoggedIn ? "book-card logged-in" : "book-card logged-out";
 
-  const cover = el("div", "book-cover-container");
-  cover.append(el("img", "book-cover", null, { src: imageUrl(book), alt: `Omslag: ${book.title}` }));
+  if (!isLoggedIn) {
+    return createBookCard(book, { loggedIn: false, avgRating, ratingSection: null, actions: [] });
+  }
 
-  const info = el("div", "book-info");
-  info.append(
-    el("h3", "book-title", book.title),
-    el("p", "book-author", book.author),
-    el("p", "book-details", `Sidor: ${book.pages}`),
-    el("p", "book-details", `Publicerad: ${book.publicationDate}`),
-    el("p", "book-rating", formatAvgRating(avgRating))
-  );
+  const card = createBookCard(book, {
+    avgRating,
+    ratingSection: createRatingSelect(userRating?.rating, async (rating) => {
+      const success = await Api.rateBook(user.documentId, book.documentId, rating);
+      if (!success) return toastr.error("Kunde inte spara betyg");
+      toastr.success("Betyg sparat!");
+      const newAvgRating = await Api.getBookRating(book.documentId);
+      card.querySelector(".book-rating").textContent = formatAvgRating(newAvgRating);
+    }),
+    actions: [createWishlistButton(alreadyInWishlist, () => Api.addToWishlist(user.documentId, book.documentId))],
+  });
+  return card;
+};
 
-  card.append(cover, info, el("div", "rating-section-container"), el("div", "button-container"));
-
-  if (token) {
-    const buttonContainer = card.querySelector(".button-container");
-    const ratingContainer = document.createElement("div");
-    ratingContainer.className = "rating-container";
-    ratingContainer.innerHTML = `
+const createRatingSelect = (currentRating, onRate) => {
+  const wrapper = document.createElement("div");
+  wrapper.className = "rating-container";
+  wrapper.innerHTML = `
       <div class="rating-section">
         <label>Ge boken ett betyg:</label>
         <select class="rating-select">
@@ -68,50 +66,36 @@ const createBookCard = async (book) => {
         </select>
       </div>
     `;
+  const select = wrapper.querySelector(".rating-select");
+  if (currentRating) select.value = currentRating;
+  select.addEventListener("change", (e) => {
+    const rating = parseInt(e.target.value);
+    if (rating) onRate(rating);
+  });
+  return wrapper;
+};
 
-    if (userRating) {
-      ratingContainer.querySelector(".rating-select").value = userRating.rating;
-    }
+const createWishlistButton = (alreadyInWishlist, onAdd) => {
+  const button = document.createElement("button");
+  const markSaved = () => {
+    button.textContent = "Boken är sparad";
+    button.disabled = true;
+    button.className = "book-action-btn wishlist-btn active";
+  };
 
-    ratingContainer.querySelector(".rating-select").addEventListener("change", async (e) => {
-      const rating = parseInt(e.target.value);
-      if (rating) {
-        const success = await Api.rateBook(user.documentId, book.documentId, rating);
-        if (success) {
-          toastr.success("Betyg sparat!");
-          const newAvgRating = await Api.getBookRating(book.documentId);
-          card.querySelector(".book-rating").textContent = formatAvgRating(newAvgRating);
-        } else {
-          toastr.error("Kunde inte spara betyg");
-        }
+  if (alreadyInWishlist) {
+    markSaved();
+  } else {
+    button.textContent = "Läs senare";
+    button.className = "book-action-btn read-later-btn";
+    button.addEventListener("click", async () => {
+      if (await onAdd()) {
+        toastr.success("Boken tillagd");
+        markSaved();
       }
     });
-
-    const ratingSectionContainer = card.querySelector(".rating-section-container");
-    ratingSectionContainer.append(ratingContainer);
-    const wishlistBtn = document.createElement("button");
-
-    if (alreadyInWishlist) {
-      wishlistBtn.textContent = "Boken är sparad";
-      wishlistBtn.disabled = true;
-      wishlistBtn.className = "book-action-btn wishlist-btn active";
-    } else {
-      wishlistBtn.textContent = "Läs senare";
-      wishlistBtn.className = "book-action-btn read-later-btn";
-      wishlistBtn.addEventListener("click", async () => {
-        if (await Api.addToWishlist(user.documentId, book.documentId)) {
-          toastr.success("Boken tillagd");
-          wishlistBtn.textContent = "Boken är sparad";
-          wishlistBtn.disabled = true;
-          wishlistBtn.className = "book-action-btn wishlist-btn active";
-        }
-      });
-    }
-
-    buttonContainer.append(wishlistBtn);
   }
-
-  return card;
+  return button;
 };
 
 document.addEventListener("DOMContentLoaded", () => {
