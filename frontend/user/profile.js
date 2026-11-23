@@ -1,7 +1,8 @@
-import { Api, imageUrl } from "../api.js";
+import { Api } from "../api.js";
 import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
+import { createBookCard } from "../components/bookCard.js";
 
 await Api.isLoggedIn();
 
@@ -92,7 +93,7 @@ const renderWishlist = () => {
   }
 
   userWishlist.forEach((book) => {
-    container.append(createBookCard(book));
+    container.append(createWishlistCard(book));
   });
 };
 
@@ -122,68 +123,31 @@ const loadBooks = async () => {
   renderRatings();
 };
 
-// Omslag + info för ett bokkort, byggt med textContent (säkert mot HTML i API-data).
-const bookCardParts = (book) => {
-  const cover = el("div", "book-cover-container");
-  cover.append(el("img", "book-cover", null, { src: imageUrl(book), alt: `Omslag: ${book.title}` }));
-  const info = el("div", "book-info");
-  info.append(
-    el("h3", "book-title", book.title),
-    el("p", "book-author", book.author),
-    el("p", "book-details", `Sidor: ${book.pages}`),
-    el("p", "book-details", `Publicerad: ${book.publicationDate}`)
-  );
-  return [cover, info];
+const createWishlistCard = (item) => {
+  const removeBtn = el("button", "book-action-btn remove-from-wishlist", "Ta bort från listan");
+  const wishlistId = item.documentId;
+
+  removeBtn.addEventListener("click", async () => {
+    if (!confirm("Är du säker på att du vill ta bort boken från din önskelista?")) return;
+    if (await Api.deleteWishlistItem(wishlistId)) {
+      toastr.success("Boken har tagits bort!");
+      const filterById = (id) => (entry) => entry.documentId !== id;
+      originalWishlist = originalWishlist.filter(filterById(wishlistId));
+      userWishlist = userWishlist.filter(filterById(wishlistId));
+      renderWishlist();
+    } else {
+      toastr.error("Kunde inte ta bort boken, försök igen");
+    }
+  });
+
+  return createBookCard(item.book, { actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
 };
 
-const createBookCard = (book) => {
-  const card = document.createElement("div");
-  card.className = "book-card logged-in";
-  card.append(...bookCardParts(book.book), el("div", "button-container"));
-
-  if (sessionStorage.getItem("token")) {
-    const removeBtn = document.createElement("button");
-    removeBtn.textContent = "Ta bort från listan";
-    removeBtn.className = "book-action-btn remove-from-wishlist";
-
-    const buttonContainer = card.querySelector(".button-container");
-    buttonContainer.append(removeBtn);
-
-    const wishlistId = book.documentId;
-
-    removeBtn.addEventListener("click", function () {
-      if (confirm("Är du säker på att du vill ta bort boken från din önskelista?")) {
-        Api.deleteWishlistItem(wishlistId).then((success) => {
-          if (success) {
-            toastr.success("Boken har tagits bort!");
-            const filterById = (id) => (item) => item.documentId !== id;
-            originalWishlist = originalWishlist.filter(filterById(wishlistId));
-            userWishlist = userWishlist.filter(filterById(wishlistId));
-            renderWishlist();
-          } else {
-            toastr.error("Kunde inte ta bort boken, försök igen");
-          }
-        });
-      }
-    });
-  }
-
-  return card;
-};
-
-const createRatingCard = (ratingData) => {
-  const book = ratingData.book;
-  const rating = ratingData.rating;
-  const card = document.createElement("div");
-  card.className = "book-card logged-in";
-  const [cover, info] = bookCardParts(book);
+const createRatingCard = ({ book, rating }) => {
   const ratingLine = el("p", "book-rating");
   ratingLine.style.fontSize = "18px";
   ratingLine.append(el("strong", null, `Ditt betyg: ${rating}`));
-  info.append(ratingLine);
-  card.append(cover, info);
-
-  return card;
+  return createBookCard(book, { ratingLine });
 };
 
 const toggleSection = (section) => {
