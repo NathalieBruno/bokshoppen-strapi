@@ -128,7 +128,6 @@ export class Api {
 
   static async isLoggedIn() {
     const token = this.getAuthHeader();
-    console.log("Min token:", token);
 
     if (!token && !isHomePage()) {
       window.location.href = pageUrl("index.html");
