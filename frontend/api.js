@@ -332,6 +332,27 @@ export class Api {
     }
   }
 
+  static async deleteRating(documentId) {
+    if (DEMO_MODE) {
+      const store = readDemoStore();
+      delete store.ratings[documentId.replace("demo-rating-", "")];
+      writeDemoStore(store);
+      return true;
+    }
+    try {
+      const token = this.getAuthHeader();
+      if (!token) return false;
+
+      await axios.delete(`${API_URL}/ratings/${documentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return true;
+    } catch (err) {
+      console.error("Fel vid borttagning av betyg:", err);
+      return false;
+    }
+  }
+
   static logout() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("user");

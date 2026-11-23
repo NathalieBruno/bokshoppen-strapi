@@ -37,7 +37,7 @@ const lists = {
     activeSort: null,
     container: "ratings-container",
     count: "ratings-count",
-    empty: "Du har inte betygsatt några böcker än.",
+    empty: "Du har inte läst eller betygsatt några böcker än.",
     createCard: (item) => createRatingCard(item),
     sortButtons: { title: "sort-rating-title", author: "sort-rating-author", rating: "sort-rating-rating" },
   },
