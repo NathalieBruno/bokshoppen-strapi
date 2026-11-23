@@ -2,11 +2,11 @@
 
 En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem i en önskelista.
 
-## 🎯 Syfte
+## Syfte
 
 Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan användas som backend för en egen frontend. Administratören lägger in och ändrar böcker och tema i Strapi, medan besökare kan betygsätta böckerna och spara dem i sin önskelista.
 
-## ✨ Funktioner
+## Funktioner
 
 - 📖 Bokkatalog med omslag, författare, sidantal och snittbetyg
 - 🔐 Registrering och inloggning
@@ -15,7 +15,7 @@ Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan anv
 - 🔤 Sortering efter titel, författare och betyg på profilsidan
 - 🎨 Tre teman (vår, sommar, höst)
 
-## 🛠️ Tech stack
+## Tech stack
 
 |                        |                                         |
 | ---------------------- | --------------------------------------- |
@@ -24,16 +24,16 @@ Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan anv
 | 📦 Bibliotek (via CDN) | axios, jQuery, Toastr                   |
 | ☁️ Hosting av demon    | Netlify                                 |
 
-## 🔀 Strapi lokalt eller demo
+## Strapi lokalt eller demo
 
 Samma frontend kan köras på två sätt:
 
-|                          | 💻 Lokalt med Strapi                 | ☁️ Demo på Netlify                                                 |
-| ------------------------ | ------------------------------------ | ------------------------------------------------------------------ |
+|                          | 💻 Lokalt med Strapi                  | ☁️ Demo på Netlify                                                 |
+| ------------------------ | ------------------------------------- | ------------------------------------------------------------------ |
 | **Data**                 | Hämtas från Strapi (`localhost:1337`) | Fast katalog med 12 böcker i `frontend/demo/`                      |
-| **Böcker och tema**      | Ändras av administratören i Strapi   | Böckerna är fasta, temat byter besökaren själv längst ned på sidan |
-| **Konto**                | Riktig registrering och inloggning   | Knappen **Try demo account**                                       |
-| **Betyg och önskelista** | Sparas i Strapi                      | Sparas bara i din egen webbläsare                                  |
+| **Böcker och tema**      | Ändras av administratören i Strapi    | Böckerna är fasta, temat byter besökaren själv längst ned på sidan |
+| **Konto**                | Riktig registrering och inloggning    | Knappen **Try demo account**                                       |
+| **Betyg och önskelista** | Sparas i Strapi                       | Sparas bara i din egen webbläsare                                  |
 
 Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du det med `?demo=1` (demo utan Strapi) eller `?demo=0` (tvinga Strapi). Inställningar för Netlify finns i `netlify.toml`.
 
@@ -51,7 +51,7 @@ Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du de
 
 Du behöver [Node.js](https://nodejs.org) 18–22.
 
-**1. Starta Strapi** 🗄️
+**1. Starta Strapi**
 
 ```bash
 cd backend
@@ -62,7 +62,7 @@ npm run develop
 
 Strapi startar på `http://localhost:1337`. Första gången skapar du ett adminkonto, lägger in böcker och ställer in behörigheter under _Settings → Users & Permissions_.
 
-**2. Starta frontend** 🖥️
+**2. Starta frontend**
 
 Öppna projektmappen i VS Code och starta **Live Server** på `frontend/index.html`.
 
