@@ -80,11 +80,23 @@
     <dialog id="confirm-modal" class="modal" aria-labelledby="confirm-title" aria-describedby="confirm-text">
       <div class="modal-inner">
         <button type="button" class="close" aria-label="Stäng">&times;</button>
-        <h2 id="confirm-title">Ta bort boken?</h2>
+        <h2 id="confirm-title" data-confirm-title>Ta bort boken?</h2>
         <p class="modal-sub" id="confirm-text" data-confirm-text></p>
         <div class="confirm-actions">
           <button type="button" class="btn" data-cancel>Avbryt</button>
           <button type="button" class="btn btn-danger-solid" data-confirm-ok>Ta bort</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="read-modal" class="modal" aria-labelledby="read-title" aria-describedby="read-text">
+      <div class="modal-inner">
+        <button type="button" class="close" aria-label="Stäng">&times;</button>
+        <h2 id="read-title">Vad tyckte du?</h2>
+        <p class="modal-sub" id="read-text"></p>
+        <div id="read-rating"></div>
+        <div class="confirm-actions">
+          <button type="button" class="btn" data-cancel>Avbryt</button>
         </div>
       </div>
     </dialog>

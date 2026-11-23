@@ -3,7 +3,8 @@ import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
 import { createBookCard } from "../components/bookCard.js";
-import { closeModal, closeOnBackdropClick, confirmDialog } from "../components/modal.js";
+import { createRatingSelect } from "../components/ratingSelect.js";
+import { closeModal, closeOnBackdropClick, confirmDialog, openModal } from "../components/modal.js";
 
 await Api.isLoggedIn();
 
@@ -80,6 +81,8 @@ const loadBooks = async () => {
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [me, ratings] = await Promise.all([Api.getMeWithWishlist(), Api.getUserRatings(user.documentId)]);
 
+  lists.wishlist.activeSort = null;
+  lists.ratings.activeSort = null;
   lists.wishlist.items = me.wishlists;
   lists.wishlist.original = [...me.wishlists];
   lists.ratings.items = ratings;
@@ -95,7 +98,43 @@ confirmModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
   button.addEventListener("click", () => closeModal(confirmModal));
 });
 
+// "Jag har läst boken": betyget sparas, boken tas bort från önskelistan och listorna laddas om.
+const readModal = document.getElementById("read-modal");
+closeOnBackdropClick(readModal);
+readModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
+  button.addEventListener("click", () => closeModal(readModal));
+});
+
+const markAsRead = (item) => {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  document.getElementById("read-text").textContent = `Betygsätt ”${item.book.title}” så flyttas den från önskelistan till dina lästa böcker.`;
+  document.getElementById("read-rating").replaceChildren(
+    createRatingSelect(null, async (rating) => {
+      let saved = false;
+      try {
+        saved = await Api.rateBook(user.documentId, item.book.documentId, rating);
+      } catch (err) {
+        console.error("Fel vid sparande av betyg:", err);
+      }
+      if (!saved) {
+        toastr.error("Kunde inte spara betyget, försök igen");
+        return;
+      }
+      const removed = await Api.deleteWishlistItem(item.documentId);
+      closeModal(readModal);
+      if (removed) toastr.success("Boken är flyttad till dina lästa böcker!");
+      else toastr.warning("Betyget sparades, men boken kunde inte tas bort från önskelistan");
+      await loadBooks();
+    })
+  );
+  openModal(readModal);
+};
+
 const createWishlistCard = (item) => {
+  const readBtn = el("button", "btn btn-primary btn-block", "Jag har läst boken", { type: "button" });
+  readBtn.append(el("span", "sr-only", `: ${item.book.title}`));
+  readBtn.addEventListener("click", () => markAsRead(item));
+
   const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort från listan", { type: "button" });
   removeBtn.append(el("span", "sr-only", `: ${item.book.title}`));
 
@@ -114,17 +153,39 @@ const createWishlistCard = (item) => {
     }
   });
 
-  return createBookCard(item.book, { headingLevel: 3, actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
+  return createBookCard(item.book, { headingLevel: 3, actions: sessionStorage.getItem("token") ? [readBtn, removeBtn] : [] });
 };
 
-const createRatingCard = ({ book, rating }) => {
+const createRatingCard = (item) => {
+  const { book, rating } = item;
+  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort boken", { type: "button" });
+  removeBtn.append(el("span", "sr-only", `: ${book.title}`));
+
+  removeBtn.addEventListener("click", async () => {
+    const confirmed = await confirmDialog(confirmModal, `”${book.title}” tas bort från dina lästa böcker och ditt betyg raderas.`, {
+      title: "Ta bort boken?",
+      confirmLabel: "Ta bort",
+    });
+    if (!confirmed) return;
+
+    if (await Api.deleteRating(item.documentId)) {
+      toastr.success("Boken har tagits bort!");
+      const withoutItem = (entry) => entry.documentId !== item.documentId;
+      lists.ratings.original = lists.ratings.original.filter(withoutItem);
+      lists.ratings.items = lists.ratings.items.filter(withoutItem);
+      renderList("ratings");
+    } else {
+      toastr.error("Kunde inte ta bort boken, försök igen");
+    }
+  });
+
   const ratingLine = el("p", "my-rating");
   ratingLine.append(
     el("span", "sr-only", "Ditt betyg: "),
     el("span", "my-rating-value", String(rating)),
     el("span", "my-rating-of", "av 10 · ditt betyg")
   );
-  return createBookCard(book, { ratingLine, headingLevel: 3 });
+  return createBookCard(book, { ratingLine, headingLevel: 3, actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
 };
 
 // Hopfällbara sektioner: knappen i rubriken styr aria-expanded och döljer innehållet.

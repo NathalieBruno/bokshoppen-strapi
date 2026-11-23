@@ -18,10 +18,14 @@ export const closeOnBackdropClick = (dialog) => {
 // Bekräftelsedialog som ersätter window.confirm(). Dialogen behöver ett element med
 // data-confirm-text (frågetexten) och en knapp med data-confirm-ok. Löser till true om användaren
 // bekräftar, annars false (Avbryt, stängknapp, Escape eller klick utanför).
-export const confirmDialog = (dialog, message) =>
+// Valfritt: { title, confirmLabel } byter rubrik (data-confirm-title) och knapptext; utan dem visas
+// dialogens ordinarie texter.
+export const confirmDialog = (dialog, message, { title, confirmLabel } = {}) =>
   new Promise((resolve) => {
     let confirmed = false;
     const okButton = dialog.querySelector("[data-confirm-ok]");
+    const titleEl = dialog.querySelector("[data-confirm-title]");
+    const defaults = { title: titleEl?.textContent, confirmLabel: okButton.textContent };
 
     const onOk = () => {
       confirmed = true;
@@ -29,9 +33,13 @@ export const confirmDialog = (dialog, message) =>
     };
     const onClose = () => {
       okButton.removeEventListener("click", onOk);
+      if (titleEl) titleEl.textContent = defaults.title;
+      okButton.textContent = defaults.confirmLabel;
       resolve(confirmed);
     };
 
+    if (titleEl && title) titleEl.textContent = title;
+    if (confirmLabel) okButton.textContent = confirmLabel;
     dialog.querySelector("[data-confirm-text]").textContent = message;
     okButton.addEventListener("click", onOk);
     dialog.addEventListener("close", onClose, { once: true });

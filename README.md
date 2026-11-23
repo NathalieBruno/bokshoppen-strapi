@@ -13,6 +13,7 @@ Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan anv
 - ⭐ Betygsätt böcker (1–10)
 - 🔖 Önskelista med möjlighet att ta bort böcker
 - 🔤 Sortering efter titel, författare och betyg på profilsidan
+- ✅ Markera en bok från önskelistan som läst (den betygsätts och flyttas till dina lästa och betygsatta böcker) och ta bort den därifrån igen (betyget raderas)
 - 🎨 Tre teman (vår, sommar, höst)
 
 ## Tech stack
