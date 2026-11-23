@@ -1,3 +1,4 @@
+@charset "UTF-8";
 :root {
   --primary-color: #4a6751;
   --primary-color-hover: #5a765a;
@@ -56,9 +57,7 @@ header h1 {
 }
 
 .btn {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   font-family: inherit;
   line-height: inherit;
   box-sizing: border-box;
@@ -114,8 +113,7 @@ section {
 .book-cover {
   width: 80%;
   height: 300px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   display: block;
   margin: 0 auto;
 }
@@ -228,7 +226,6 @@ section {
 
 .modal {
   display: none;
-  /* <dialog>: nollställ webbläsarens standardutseende så det ser ut som tidigare */
   border: none;
   padding: 0;
   max-width: none;
@@ -406,9 +403,7 @@ section {
   align-items: center;
   gap: 10px;
   margin-bottom: 18px;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 .section-header:hover {
   opacity: 0.7;
@@ -465,8 +460,6 @@ section {
     padding: 8px 16px;
   }
 }
-
-/* Demoversion (Netlify) */
 .demo-badge {
   display: inline-block;
   margin-left: 10px;
@@ -554,7 +547,7 @@ body.has-site-footer > main {
   text-decoration: underline;
 }
 .theme-switcher button[aria-pressed=true]::before {
-  content: "\2713\00a0";
+  content: "✓ ";
 }
 .theme-switcher .theme-switcher-note {
   flex-basis: 100%;
