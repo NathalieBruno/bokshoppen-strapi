@@ -39,7 +39,7 @@ Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du de
 
 ## 🚀 Testa demon
 
-🌐 **Live demo:** [book-store-strapi.netlify.app](https://book-store-strapi.netlify.app/)
+🌐 **Live demo:** [bokshoppen-strapi.netlify.app](https://bokshoppen-strapi.netlify.app/)
 
 1. 🔑 Klicka på **Logga in** och sedan **Try demo account** – du behöver inga uppgifter.
 2. ⭐ Betygsätt en bok i listan.
