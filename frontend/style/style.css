@@ -491,6 +491,9 @@ body.has-site-footer {
   flex-direction: column;
   min-height: 100vh;
 }
+body.has-site-footer > main {
+  width: 100%;
+}
 
 .theme-switcher {
   display: flex;
