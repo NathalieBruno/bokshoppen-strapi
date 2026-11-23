@@ -564,6 +564,148 @@ dialog.modal::backdrop {
     padding: 2rem 1.25rem 1.5rem;
   }
 }
+.profile-sections {
+  display: grid;
+  gap: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.shelf-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+.shelf-section .book-card {
+  background: transparent;
+}
+.shelf-section #wishlist-container,
+.shelf-section #ratings-container {
+  padding-bottom: 0;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 0;
+  border-radius: 20px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.toggle:hover {
+  background: color-mix(in srgb, var(--green) 6%, transparent);
+}
+.toggle .chevron {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s;
+}
+.toggle[aria-expanded=false] .chevron {
+  transform: rotate(-90deg);
+}
+
+.toggle-label {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.toggle-count {
+  margin-left: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.section-body {
+  padding: 0 1.5rem 1.75rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.toolbar-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-btn {
+  min-height: 2.5rem;
+  padding: 0.375rem 1rem;
+  border: 1.5px solid var(--control-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+.chip-btn:hover {
+  border-color: var(--green);
+}
+.chip-btn[aria-pressed=true] {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.chip-btn[aria-pressed=true]::before {
+  content: "✓ "/"";
+}
+
+.empty-state {
+  grid-column: 1/-1;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--muted);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.confirm-actions .btn {
+  flex: 1 1 8rem;
+}
+
+@media (max-width: 40rem) {
+  .toggle {
+    padding: 1rem;
+  }
+  .section-body {
+    padding: 0 1rem 1.25rem;
+  }
+}
 :root {
   --primary-color: var(--green);
   --primary-color-hover: var(--green-dark);
@@ -575,79 +717,6 @@ dialog.modal::backdrop {
   --text-color: var(--ink);
   --light-text: var(--muted);
   --white: var(--surface);
-}
-
-.sort-controls {
-  margin-bottom: 25px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-}
-
-.sort-btn {
-  padding: 12px 16px;
-  font-size: 16px;
-  background-color: rgb(213, 219, 213);
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-}
-.sort-btn:hover {
-  background-color: rgb(180, 190, 180);
-  transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.sort-btn.active {
-  background-color: #4a6751;
-  color: var(--white);
-}
-.sort-btn.active:hover {
-  background-color: rgb(48, 78, 48);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-.ratings-collapse {
-  margin-top: 40px;
-}
-
-.collapsible-section {
-  margin-bottom: 32px;
-}
-
-.section-header {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-  user-select: none;
-}
-.section-header:hover {
-  opacity: 0.7;
-}
-.section-header h2 {
-  margin-bottom: 0;
-}
-.section-header .toggle-icon {
-  font-size: 24px;
-  transition: transform 0.5s ease;
-  color: var(--primary-color);
-}
-.section-header .toggle-icon.collapsed {
-  transform: rotate(-90deg);
-}
-
-.section-content {
-  overflow: hidden;
-  transition: max-height 0.5s ease;
-}
-.section-content.collapsed {
-  max-height: 0;
-}
-.section-content.expanded {
-  max-height: 3000px;
-  padding: 10px;
 }
 
 .site-footer {

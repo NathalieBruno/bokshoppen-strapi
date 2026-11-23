@@ -3,138 +3,112 @@ import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
 import { createBookCard } from "../components/bookCard.js";
+import { closeModal, closeOnBackdropClick, confirmDialog } from "../components/modal.js";
 
 await Api.isLoggedIn();
 
+// Controller för profilsidan: hämtar data via Api, låter bookCard rendera och hanterar sortering,
+// hopfällning och borttagning.
 
-const sortTitleBtn = document.getElementById("sort-title");
-const sortAuthorBtn = document.getElementById("sort-author");
-const sortRatingTitleBtn = document.getElementById("sort-rating-title");
-const sortRatingAuthorBtn = document.getElementById("sort-rating-author");
-const sortRatingRatingBtn = document.getElementById("sort-rating-rating");
+const byBookText = (field) => (a, b) =>
+  a.book[field].toLowerCase().trim().localeCompare(b.book[field].toLowerCase().trim(), "sv");
 
-let userWishlist = [];
-let originalWishlist = [];
-let userRatings = [];
-let originalRatings = [];
-
-const getUserWishlist = async () => {
-  const me = await Api.getMeWithWishlist();
-
-  userWishlist = me.wishlists;
-
-  return { wishlist: userWishlist };
+const comparators = {
+  title: byBookText("title"),
+  author: byBookText("author"),
+  rating: (a, b) => b.rating - a.rating,
 };
 
-const getUserRatings = async () => {
-  const user = JSON.parse(sessionStorage.getItem("user"));
-  userRatings = await Api.getUserRatings(user.documentId);
-  return userRatings;
+// En lista per sektion: aktuell ordning, ursprunglig ordning och vilken sortering som är aktiv.
+const lists = {
+  wishlist: {
+    items: [],
+    original: [],
+    activeSort: null,
+    container: "wishlist-container",
+    count: "wishlist-count",
+    empty: "Din önskelista är tom.",
+    createCard: (item) => createWishlistCard(item),
+    sortButtons: { title: "sort-title", author: "sort-author" },
+  },
+  ratings: {
+    items: [],
+    original: [],
+    activeSort: null,
+    container: "ratings-container",
+    count: "ratings-count",
+    empty: "Du har inte betygsatt några böcker än.",
+    createCard: (item) => createRatingCard(item),
+    sortButtons: { title: "sort-rating-title", author: "sort-rating-author", rating: "sort-rating-rating" },
+  },
 };
 
-const sortWishlist = (sortBy, buttonId, otherButtonId) => {
-  const activeBtn = document.getElementById(buttonId);
+const renderList = (name) => {
+  const list = lists[name];
+  const container = document.getElementById(list.container);
+  container.replaceChildren();
 
-  if (activeBtn.classList.contains("active")) {
-    userWishlist = [...originalWishlist];
-    renderWishlist();
-    activeBtn.classList.remove("active");
-    return;
-  }
+  const count = list.items.length;
+  document.getElementById(list.count).textContent = count === 1 ? "1 bok" : `${count} böcker`;
 
-  userWishlist.sort((a, b) => {
-    const valueA = a.book[sortBy].toLowerCase().trim();
-    const valueB = b.book[sortBy].toLowerCase().trim();
-    return valueA.localeCompare(valueB, "sv");
-  });
-
-  renderWishlist();
-  activeBtn.classList.add("active");
-  document.getElementById(otherButtonId).classList.remove("active");
-};
-
-const sortRatings = (sortBy, buttonId) => {
-  const activeBtn = document.getElementById(buttonId);
-
-  if (activeBtn.classList.contains("active")) {
-    userRatings = [...originalRatings];
-    renderRatings();
-    sortRatingTitleBtn?.classList.remove("active");
-    sortRatingAuthorBtn?.classList.remove("active");
-    sortRatingRatingBtn?.classList.remove("active");
-    return;
-  }
-
-  if (sortBy === "rating") {
-    userRatings.sort((a, b) => b.rating - a.rating);
+  if (count === 0) {
+    container.append(el("p", "empty-state", list.empty));
   } else {
-    userRatings.sort((a, b) => {
-      const valueA = a.book[sortBy].toLowerCase().trim();
-      const valueB = b.book[sortBy].toLowerCase().trim();
-      return valueA.localeCompare(valueB, "sv");
-    });
+    container.append(...list.items.map(list.createCard));
   }
 
-  renderRatings();
-
-  sortRatingTitleBtn?.classList.remove("active");
-  sortRatingAuthorBtn?.classList.remove("active");
-  sortRatingRatingBtn?.classList.remove("active");
-  activeBtn.classList.add("active");
-};
-
-const renderWishlist = () => {
-  const container = document.getElementById("wishlist-container");
-  container.innerHTML = "";
-
-  if (userWishlist.length === 0) {
-    container.innerHTML = "<p>Din önskelista är tom.</p>";
-    return;
-  }
-
-  userWishlist.forEach((book) => {
-    container.append(createWishlistCard(book));
+  Object.entries(list.sortButtons).forEach(([sortBy, buttonId]) => {
+    document.getElementById(buttonId).setAttribute("aria-pressed", String(list.activeSort === sortBy));
   });
 };
 
-const renderRatings = () => {
-  const container = document.getElementById("ratings-container");
-  container.innerHTML = "";
-
-  if (userRatings.length === 0) {
-    container.innerHTML = "<p>Du har inte betygsatt några böcker än.</p>";
-    return;
+// Klick på aktiv sortering återställer ursprunglig ordning (som tidigare).
+const sortList = (name, sortBy) => {
+  const list = lists[name];
+  if (list.activeSort === sortBy) {
+    list.activeSort = null;
+    list.items = [...list.original];
+  } else {
+    list.activeSort = sortBy;
+    list.items = [...list.items].sort(comparators[sortBy]);
   }
-
-  userRatings.forEach((rating) => {
-    container.append(createRatingCard(rating));
-  });
+  renderList(name);
+  document.getElementById(list.sortButtons[sortBy]).focus();
 };
 
 const loadBooks = async () => {
-  const books = await getUserWishlist();
-  userWishlist = books.wishlist;
-  originalWishlist = [...userWishlist];
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const [me, ratings] = await Promise.all([Api.getMeWithWishlist(), Api.getUserRatings(user.documentId)]);
 
-  await getUserRatings();
-  originalRatings = [...userRatings];
+  lists.wishlist.items = me.wishlists;
+  lists.wishlist.original = [...me.wishlists];
+  lists.ratings.items = ratings;
+  lists.ratings.original = [...ratings];
 
-  renderWishlist();
-  renderRatings();
+  renderList("wishlist");
+  renderList("ratings");
 };
 
+const confirmModal = document.getElementById("confirm-modal");
+closeOnBackdropClick(confirmModal);
+confirmModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
+  button.addEventListener("click", () => closeModal(confirmModal));
+});
+
 const createWishlistCard = (item) => {
-  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort från listan");
-  const wishlistId = item.documentId;
+  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort från listan", { type: "button" });
+  removeBtn.append(el("span", "sr-only", `: ${item.book.title}`));
 
   removeBtn.addEventListener("click", async () => {
-    if (!confirm("Är du säker på att du vill ta bort boken från din önskelista?")) return;
-    if (await Api.deleteWishlistItem(wishlistId)) {
+    const confirmed = await confirmDialog(confirmModal, `”${item.book.title}” tas bort från din önskelista.`);
+    if (!confirmed) return;
+
+    if (await Api.deleteWishlistItem(item.documentId)) {
       toastr.success("Boken har tagits bort!");
-      const filterById = (id) => (entry) => entry.documentId !== id;
-      originalWishlist = originalWishlist.filter(filterById(wishlistId));
-      userWishlist = userWishlist.filter(filterById(wishlistId));
-      renderWishlist();
+      const withoutItem = (entry) => entry.documentId !== item.documentId;
+      lists.wishlist.original = lists.wishlist.original.filter(withoutItem);
+      lists.wishlist.items = lists.wishlist.items.filter(withoutItem);
+      renderList("wishlist");
     } else {
       toastr.error("Kunde inte ta bort boken, försök igen");
     }
@@ -153,27 +127,23 @@ const createRatingCard = ({ book, rating }) => {
   return createBookCard(book, { ratingLine, headingLevel: 3 });
 };
 
-const toggleSection = (section) => {
-  const content = document.getElementById(`${section}-content`);
-  const icon = document.getElementById(`${section}-icon`);
+// Hopfällbara sektioner: knappen i rubriken styr aria-expanded och döljer innehållet.
+document.querySelectorAll(".toggle[data-section]").forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    document.getElementById(`${toggle.dataset.section}-content`).hidden = expanded;
+  });
+});
 
-  content.classList.toggle("collapsed");
-  content.classList.toggle("expanded");
-  icon.classList.toggle("collapsed");
-};
-
-document.querySelectorAll(".section-header[data-section]").forEach((header) => {
-  header.addEventListener("click", () => toggleSection(header.dataset.section));
+Object.entries(lists).forEach(([name, list]) => {
+  Object.entries(list.sortButtons).forEach(([sortBy, buttonId]) => {
+    document.getElementById(buttonId).addEventListener("click", () => sortList(name, sortBy));
+  });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   applyTheme();
 });
-
-sortTitleBtn.addEventListener("click", () => sortWishlist("title", "sort-title", "sort-author"));
-sortAuthorBtn.addEventListener("click", () => sortWishlist("author", "sort-author", "sort-title"));
-sortRatingTitleBtn.addEventListener("click", () => sortRatings("title", "sort-rating-title"));
-sortRatingAuthorBtn.addEventListener("click", () => sortRatings("author", "sort-rating-author"));
-sortRatingRatingBtn.addEventListener("click", () => sortRatings("rating", "sort-rating-rating"));
 
 loadBooks();
