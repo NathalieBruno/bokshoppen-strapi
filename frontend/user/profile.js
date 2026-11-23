@@ -1,5 +1,6 @@
 import { Api, imageUrl } from "../api.js";
 import { applyTheme } from "../theme.js";
+import { el } from "../dom.js";
 
 await Api.isLoggedIn();
 
@@ -124,22 +125,24 @@ const loadBooks = async () => {
   renderRatings();
 };
 
+// Omslag + info för ett bokkort, byggt med textContent (säkert mot HTML i API-data).
+const bookCardParts = (book) => {
+  const cover = el("div", "book-cover-container");
+  cover.append(el("img", "book-cover", null, { src: imageUrl(book), alt: `Omslag: ${book.title}` }));
+  const info = el("div", "book-info");
+  info.append(
+    el("h3", "book-title", book.title),
+    el("p", "book-author", book.author),
+    el("p", "book-details", `Sidor: ${book.pages}`),
+    el("p", "book-details", `Publicerad: ${book.publicationDate}`)
+  );
+  return [cover, info];
+};
+
 const createBookCard = (book) => {
   const card = document.createElement("div");
   card.className = "book-card logged-in";
-  card.innerHTML = `
-      <div class="book-cover-container">
-        <img src="${imageUrl(book.book)}" class="book-cover">
-      </div>
-      <div class="book-info">
-        <h3 class="book-title">${book.book.title}</h3>
-        <p class="book-author">${book.book.author}</p>
-        <p class="book-details">Sidor: ${book.book.pages}</p>
-        <p class="book-details">Publicerad: ${book.book.publicationDate}</p>
-      </div>
-      <div class="button-container"></div>
-      
-    `;
+  card.append(...bookCardParts(book.book), el("div", "button-container"));
 
   if (sessionStorage.getItem("token")) {
     const removeBtn = document.createElement("button");
@@ -176,18 +179,12 @@ const createRatingCard = (ratingData) => {
   const rating = ratingData.rating;
   const card = document.createElement("div");
   card.className = "book-card logged-in";
-  card.innerHTML = `
-      <div class="book-cover-container">
-        <img src="${imageUrl(book)}" class="book-cover">
-      </div>
-      <div class="book-info">
-        <h3 class="book-title">${book.title}</h3>
-        <p class="book-author">${book.author}</p>
-        <p class="book-details">Sidor: ${book.pages}</p>
-        <p class="book-details">Publicerad: ${book.publicationDate}</p>
-        <p class="book-rating" style="font-size: 18px;"><strong>Ditt betyg: ${rating}</strong></p>
-      </div>
-    `;
+  const [cover, info] = bookCardParts(book);
+  const ratingLine = el("p", "book-rating");
+  ratingLine.style.fontSize = "18px";
+  ratingLine.append(el("strong", null, `Ditt betyg: ${rating}`));
+  info.append(ratingLine);
+  card.append(cover, info);
 
   return card;
 };

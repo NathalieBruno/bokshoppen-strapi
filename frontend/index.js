@@ -1,5 +1,6 @@
 import { Api, imageUrl } from "./api.js";
 import { applyTheme } from "./theme.js";
+import { el } from "./dom.js";
 
 await Api.isLoggedIn();
 toastr.options = {
@@ -24,21 +25,19 @@ const createBookCard = async (book) => {
   const isLoggedIn = !!token;
   card.className = isLoggedIn ? "book-card logged-in" : "book-card logged-out";
 
-  card.innerHTML = `
-    <div class="book-cover-container">
-      <img src="${imageUrl(book)}" class="book-cover">
-    </div>
-    <div class="book-info">
-      <h3 class="book-title">${book.title}</h3>
-      <p class="book-author">${book.author}</p>
-      <p class="book-details">Sidor: ${book.pages}</p>
-      <p class="book-details">Publicerad: ${book.publicationDate}</p>
-      <p class="book-rating">Snittbetyg: ⭐ ${avgRating > 0 ? `${avgRating}/10` : "Saknar betyg"}</p>
-      
-    </div>
-    <div class="rating-section-container"></div>
-    <div class="button-container"></div>
-  `;
+  const cover = el("div", "book-cover-container");
+  cover.append(el("img", "book-cover", null, { src: imageUrl(book), alt: `Omslag: ${book.title}` }));
+
+  const info = el("div", "book-info");
+  info.append(
+    el("h3", "book-title", book.title),
+    el("p", "book-author", book.author),
+    el("p", "book-details", `Sidor: ${book.pages}`),
+    el("p", "book-details", `Publicerad: ${book.publicationDate}`),
+    el("p", "book-rating", `Snittbetyg: ⭐ ${avgRating > 0 ? `${avgRating}/10` : "Saknar betyg"}`)
+  );
+
+  card.append(cover, info, el("div", "rating-section-container"), el("div", "button-container"));
 
   if (token) {
     const user = JSON.parse(sessionStorage.getItem("user"));

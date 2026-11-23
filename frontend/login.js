@@ -1,5 +1,6 @@
 import { Api, DEMO_MODE, isHomePage, pageUrl } from "./api.js";
 import { applyTheme } from "./theme.js";
+import { el } from "./dom.js";
 
 function initModals() {
   let loginBtn = document.getElementById("login-btn");
@@ -174,16 +175,21 @@ const checkLogin = () => {
 const userUI = (user) => {
   const userControls = document.getElementById("user-controls");
   if (userControls) {
-    userControls.innerHTML = `
-            ${
-              isHomePage()
-                ? `<span>Välkommen till bokklubben <strong>${user.username}</strong>!</span> <a href="${pageUrl("user/profile.html")}" class="btn btn-primary">Min profil</a>`
-                : `<span><strong>${user.username}</strong>´s profilsida</span> <a href="${pageUrl("index.html")}" class="btn btn-primary">Till förstasidan</a>`
-            }
-            <button id="logout-btn" class="btn btn-primary">Logga ut</button>
-        `;
+    const name = el("strong", null, user.username);
+    const greeting = el("span");
+    const navLink = el("a", "btn btn-primary");
+    if (isHomePage()) {
+      greeting.append("Välkommen till bokklubben ", name, "!");
+      navLink.href = pageUrl("user/profile.html");
+      navLink.textContent = "Min profil";
+    } else {
+      greeting.append(name, "´s profilsida");
+      navLink.href = pageUrl("index.html");
+      navLink.textContent = "Till förstasidan";
+    }
+    const logoutBtn = el("button", "btn btn-primary", "Logga ut", { id: "logout-btn" });
+    userControls.replaceChildren(greeting, " ", navLink, " ", logoutBtn);
 
-    const logoutBtn = document.getElementById("logout-btn");
     logoutBtn.addEventListener("click", () => {
       Api.logout();
       location.reload();
