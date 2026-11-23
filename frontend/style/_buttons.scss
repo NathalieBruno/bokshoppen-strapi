@@ -1,0 +1,61 @@
+// Ett knappsystem: runda knappar, 44 px höga. .btn = sekundär, .btn-primary = primär, .btn-danger = destruktiv.
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1.5px solid var(--green);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--green);
+  font: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: color-mix(in srgb, var(--green) 10%, transparent);
+  }
+
+  &[disabled] {
+    border-style: dashed;
+    background: transparent;
+    cursor: default;
+  }
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+
+  &:hover {
+    background: var(--green-dark);
+  }
+}
+
+.btn-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+
+  &:hover {
+    background: color-mix(in srgb, var(--danger) 9%, transparent);
+  }
+}
+
+.btn-danger-solid {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+
+  &:hover {
+    background: var(--danger-dark);
+  }
+}
+
+.btn-block {
+  width: 100%;
+}

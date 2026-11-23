@@ -88,7 +88,7 @@ const addDemoBadge = () => {
   badge.className = "demo-badge";
   badge.textContent = "Demo";
   badge.title = "Demoversion – innehållet är en fast katalog och körs utan Strapi-server";
-  header.querySelector("h1")?.append(badge);
+  header.querySelector(".brand")?.append(badge);
 };
 
 const authForms = () => {
@@ -155,26 +155,29 @@ const checkLogin = () => {
     const userControls = document.getElementById("user-controls");
     if (userControls) {
       userControls.innerHTML = `
-                <button id="login-btn" class="btn btn-primary">Logga in</button>
-                <button id="register-btn" class="btn btn-primary">Skapa ett konto</button>
+                <button id="login-btn" class="btn">Logga in</button>
+                <button id="register-btn" class="btn btn-primary">Skapa konto</button>
             `;
       initModals();
     }
   }
 };
 
+// Svensk genitiv: "Anna" -> "Annas", "Alex" -> "Alex"
+const possessive = (name) => (/[sxz]$/i.test(name) ? name : `${name}s`);
+
 const userUI = (user) => {
   const userControls = document.getElementById("user-controls");
   if (userControls) {
     const name = el("strong", null, user.username);
-    const greeting = el("span");
-    const navLink = el("a", "btn btn-primary");
+    const greeting = el("span", "greeting");
+    const navLink = el("a", "btn");
     if (isHomePage()) {
-      greeting.append("Välkommen till bokklubben ", name, "!");
+      greeting.append("Välkommen, ", name);
       navLink.href = pageUrl("user/profile.html");
       navLink.textContent = "Min profil";
     } else {
-      greeting.append(name, "´s profilsida");
+      greeting.append(el("strong", null, possessive(user.username)), " profilsida");
       navLink.href = pageUrl("index.html");
       navLink.textContent = "Till förstasidan";
     }

@@ -20,12 +20,23 @@
     <link rel="stylesheet" href="../style/style.css" />
   </head>
   <body>
-    <header>
-      <h1>Lilla Bokshoppen</h1>
-      <div id="user-controls"></div>
+    <a class="skip-link" href="#main">Hoppa till innehållet</a>
+    <header class="site-header">
+      <div class="wrap">
+        <div class="brand"><span class="brand-name">Lilla Bokshoppen</span></div>
+        <div id="user-controls"></div>
+      </div>
     </header>
 
-    <main>
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="wrap">
+          <p class="eyebrow">Din hylla</p>
+          <h1 class="page-title" id="page-title">Din profil</h1>
+          <p class="lead">Böckerna du vill läsa senare och de du har betygsatt, samlade på ett ställe.</p>
+        </div>
+      </section>
+      <div class="wrap">
       <section class="collapsible-section">
         <div class="section-header" data-section="wishlist">
           <h2>Din önskelista</h2>
@@ -53,6 +64,7 @@
           <div id="ratings-container"></div>
         </div>
       </section>
+      </div>
     </main>
   </body>
 </html>

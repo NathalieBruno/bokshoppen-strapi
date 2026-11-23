@@ -20,15 +20,29 @@
     <link rel="stylesheet" href="./style/style.css" />
   </head>
   <body>
-    <header>
-      <h1>Lilla Bokshoppen</h1>
-      <div id="user-controls"></div>
+    <a class="skip-link" href="#main">Hoppa till innehållet</a>
+    <header class="site-header">
+      <div class="wrap">
+        <div class="brand"><span class="brand-name">Lilla Bokshoppen</span></div>
+        <div id="user-controls"></div>
+      </div>
     </header>
 
-    <main>
-      <section id="books-section">
-        <h2>Månadens böcker</h2>
-        <div id="books-container"></div>
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="wrap">
+          <p class="eyebrow">Bokklubben · Månadens urval</p>
+          <h1 class="page-title" id="page-title">Månadens böcker</h1>
+          <p class="lead">
+            Läs, betygsätt och spara det du vill läsa senare. Här samlas bokklubbens favoriter på ett ställe.
+          </p>
+        </div>
+      </section>
+
+      <section id="books-section" aria-label="Böcker">
+        <div class="wrap">
+          <div id="books-container"></div>
+        </div>
       </section>
     </main>
 

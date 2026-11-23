@@ -1,0 +1,56 @@
+// Sidhuvud: namn till vänster, användarkontroller till höger.
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+
+  .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    padding-block: 1rem;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.demo-badge {
+  padding: 0.125rem 0.625rem;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+#user-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+
+  .greeting {
+    margin-right: 0.5rem;
+    color: var(--muted);
+
+    strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+  }
+}
