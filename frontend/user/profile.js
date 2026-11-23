@@ -1,13 +1,10 @@
 import { Api, imageUrl } from "../api.js";
+import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
 
 await Api.isLoggedIn();
 
-toastr.options = {
-  positionClass: "toast-bottom-right",
-  toastClass: "toast toast--custom",
-};
 
 const sortTitleBtn = document.getElementById("sort-title");
 const sortAuthorBtn = document.getElementById("sort-author");
@@ -189,7 +186,7 @@ const createRatingCard = (ratingData) => {
   return card;
 };
 
-window.toggleSection = function (section) {
+const toggleSection = (section) => {
   const content = document.getElementById(`${section}-content`);
   const icon = document.getElementById(`${section}-icon`);
 
@@ -197,6 +194,10 @@ window.toggleSection = function (section) {
   content.classList.toggle("expanded");
   icon.classList.toggle("collapsed");
 };
+
+document.querySelectorAll(".section-header[data-section]").forEach((header) => {
+  header.addEventListener("click", () => toggleSection(header.dataset.section));
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   applyTheme();

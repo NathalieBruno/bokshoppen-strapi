@@ -1,4 +1,5 @@
 import { Api, DEMO_MODE, isHomePage, pageUrl } from "./api.js";
+import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { el } from "./dom.js";
 
@@ -11,10 +12,6 @@ function initModals() {
   let showRegisterLink = document.getElementById("show-register");
   let showLoginLink = document.getElementById("show-login");
 
-  toastr.options = {
-    positionClass: "toast-bottom-right",
-    toastClass: "toast toast--custom",
-  };
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
       loginModal.style.display = "block";

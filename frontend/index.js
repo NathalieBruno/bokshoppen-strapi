@@ -1,12 +1,9 @@
 import { Api, imageUrl } from "./api.js";
+import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { el } from "./dom.js";
 
 await Api.isLoggedIn();
-toastr.options = {
-  positionClass: "toast-bottom-right",
-  toastClass: "toast toast--custom",
-};
 
 // Samma text används vid första rendering och när snittbetyget uppdateras efter en röst.
 const formatAvgRating = (avgRating) => `Snittbetyg: ⭐ ${avgRating > 0 ? `${avgRating}/10` : "Saknar betyg"}`;
