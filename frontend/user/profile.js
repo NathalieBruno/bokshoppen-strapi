@@ -124,7 +124,7 @@ const loadBooks = async () => {
 };
 
 const createWishlistCard = (item) => {
-  const removeBtn = el("button", "book-action-btn remove-from-wishlist", "Ta bort från listan");
+  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort från listan");
   const wishlistId = item.documentId;
 
   removeBtn.addEventListener("click", async () => {
@@ -140,14 +140,17 @@ const createWishlistCard = (item) => {
     }
   });
 
-  return createBookCard(item.book, { actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
+  return createBookCard(item.book, { headingLevel: 3, actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
 };
 
 const createRatingCard = ({ book, rating }) => {
-  const ratingLine = el("p", "book-rating");
-  ratingLine.style.fontSize = "18px";
-  ratingLine.append(el("strong", null, `Ditt betyg: ${rating}`));
-  return createBookCard(book, { ratingLine });
+  const ratingLine = el("p", "my-rating");
+  ratingLine.append(
+    el("span", "sr-only", "Ditt betyg: "),
+    el("span", "my-rating-value", String(rating)),
+    el("span", "my-rating-of", "av 10 · ditt betyg")
+  );
+  return createBookCard(book, { ratingLine, headingLevel: 3 });
 };
 
 const toggleSection = (section) => {

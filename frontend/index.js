@@ -1,7 +1,7 @@
 import { Api } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
-import { createBookCard, formatAvgRating } from "./components/bookCard.js";
+import { createBookCard, renderAvgRating } from "./components/bookCard.js";
 import { createRatingSelect } from "./components/ratingSelect.js";
 
 await Api.isLoggedIn();
@@ -39,7 +39,7 @@ const buildCard = async (book) => {
       if (!success) return toastr.error("Kunde inte spara betyg");
       toastr.success("Betyg sparat!");
       const newAvgRating = await Api.getBookRating(book.documentId);
-      card.querySelector(".book-rating").textContent = formatAvgRating(newAvgRating);
+      renderAvgRating(card.querySelector(".book-rating"), newAvgRating);
     }),
     actions: [createWishlistButton(alreadyInWishlist, () => Api.addToWishlist(user.documentId, book.documentId))],
   });
@@ -51,14 +51,14 @@ const createWishlistButton = (alreadyInWishlist, onAdd) => {
   const markSaved = () => {
     button.textContent = "Boken är sparad";
     button.disabled = true;
-    button.className = "book-action-btn wishlist-btn active";
+    button.className = "btn btn-block is-saved";
   };
 
   if (alreadyInWishlist) {
     markSaved();
   } else {
     button.textContent = "Läs senare";
-    button.className = "book-action-btn read-later-btn";
+    button.className = "btn btn-primary btn-block";
     button.addEventListener("click", async () => {
       if (await onAdd()) {
         toastr.success("Boken tillagd");
