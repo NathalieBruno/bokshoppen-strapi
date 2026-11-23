@@ -1,0 +1,78 @@
+// Grundstilar: reset, brödtext, länkar, fokus och hjälpklasser.
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--bg);
+  // Dämpat prickmönster (tidigare ca 20 % opacitet, nu ca 9 %)
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+  transition: background-color 0.3s;
+}
+
+a {
+  color: var(--green);
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+// Layoutbehållare: centrerad kolumn med sidmarginal som respekterar säkra områden på mobil
+.wrap {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 2000;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: var(--surface);
+
+  &:focus {
+    top: 1rem;
+  }
+}
+
+// toastr (tredjepartsbibliotek) i sajtens stil
+.toast--custom {
+  background-color: var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  opacity: 1;
+}
+
+.toast-error.toast--custom {
+  background-color: var(--danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

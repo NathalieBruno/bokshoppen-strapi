@@ -1,5 +1,9 @@
 import { Api, DEMO_MODE, isHomePage, pageUrl } from "./api.js";
+import "./toast.js";
 import { applyTheme } from "./theme.js";
+import { el } from "./dom.js";
+import { openModal, closeModal, closeOnBackdropClick } from "./components/modal.js";
+import { validateForm, clearErrorsOnInput } from "./components/formErrors.js";
 
 function initModals() {
   let loginBtn = document.getElementById("login-btn");
@@ -10,53 +14,42 @@ function initModals() {
   let showRegisterLink = document.getElementById("show-register");
   let showLoginLink = document.getElementById("show-login");
 
-  toastr.options = {
-    positionClass: "toast-bottom-right",
-    toastClass: "toast toast--custom",
-  };
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      loginModal.style.display = "block";
+      openModal(loginModal);
     });
   }
 
   if (registerBtn) {
     registerBtn.addEventListener("click", () => {
-      registerModal.style.display = "block";
+      openModal(registerModal);
     });
   }
 
   if (showRegisterLink) {
     showRegisterLink.addEventListener("click", (e) => {
       e.preventDefault();
-      loginModal.style.display = "none";
-      registerModal.style.display = "block";
+      closeModal(loginModal);
+      openModal(registerModal);
     });
   }
 
   if (showLoginLink) {
     showLoginLink.addEventListener("click", (e) => {
       e.preventDefault();
-      registerModal.style.display = "none";
-      loginModal.style.display = "block";
+      closeModal(registerModal);
+      openModal(loginModal);
     });
   }
 
   closeButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      loginModal.style.display = "none";
-      registerModal.style.display = "none";
+      closeModal(loginModal);
+      closeModal(registerModal);
     });
   });
 
-  window.addEventListener("click", (e) => {
-    if (e.target === loginModal) {
-      loginModal.style.display = "none";
-    }
-    if (e.target === registerModal) {
-      registerModal.style.display = "none";
-    }
-  });
+  [loginModal, registerModal].forEach((dialog) => dialog && closeOnBackdropClick(dialog));
 
   authForms();
   addDemoLoginButton();
@@ -67,21 +60,22 @@ const addDemoLoginButton = () => {
   const loginForm = document.getElementById("login-form");
   if (!DEMO_MODE || !loginForm || document.getElementById("demo-login-btn")) return;
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "demo-login";
-  wrapper.innerHTML = `
-    <button type="button" id="demo-login-btn" class="btn btn-primary">Try demo account</button>
-    <p class="demo-hint">Demoversion – ingen server behövs. Dina betyg och önskelista sparas bara i din webbläsare.</p>
-  `;
+  const wrapper = el("div", "demo-login");
+  const demoButton = el("button", "btn btn-block", "Prova demokontot", { type: "button", id: "demo-login-btn" });
+  wrapper.append(
+    el("div", "divider", "eller", { "aria-hidden": "true" }),
+    demoButton,
+    el("p", "demo-hint", "Demoversion. Dina betyg och din önskelista sparas bara i din webbläsare.")
+  );
   loginForm.after(wrapper);
-  wrapper.querySelector("#demo-login-btn").addEventListener("click", handleDemoLogin);
+  demoButton.addEventListener("click", handleDemoLogin);
 };
 
 const handleDemoLogin = async () => {
   const data = await Api.login();
   sessionStorage.setItem("token", data.jwt);
   sessionStorage.setItem("user", JSON.stringify(data.user));
-  document.getElementById("login-modal").style.display = "none";
+  closeModal(document.getElementById("login-modal"));
   userUI(data.user);
   toastr.success("Du är nu inloggad med demokontot - välkommen!");
   setTimeout(() => {
@@ -96,18 +90,23 @@ const addDemoBadge = () => {
   badge.className = "demo-badge";
   badge.textContent = "Demo";
   badge.title = "Demoversion – innehållet är en fast katalog och körs utan Strapi-server";
-  header.querySelector("h1")?.append(badge);
+  header.querySelector(".brand")?.append(badge);
 };
 
 const authForms = () => {
   let loginForm = document.getElementById("login-form");
   let registerForm = document.getElementById("register-form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", handleLogin);
-  }
-  if (registerForm) {
-    registerForm.addEventListener("submit", handleRegister);
-  }
+  [
+    [loginForm, handleLogin],
+    [registerForm, handleRegister],
+  ].forEach(([form, handler]) => {
+    if (!form) return;
+    clearErrorsOnInput(form);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (validateForm(form)) handler(e);
+    });
+  });
 };
 
 const handleLogin = async (e) => {
@@ -120,7 +119,7 @@ const handleLogin = async (e) => {
     let data = await Api.login(email, password);
     sessionStorage.setItem("token", data.jwt);
     sessionStorage.setItem("user", JSON.stringify(data.user));
-    document.getElementById("login-modal").style.display = "none";
+    closeModal(document.getElementById("login-modal"));
     userUI(data.user);
     toastr.success("Du loggas nu in - välkommen!");
     setTimeout(() => {
@@ -143,7 +142,7 @@ const handleRegister = async (event) => {
     let data = await Api.register(username, email, password);
     sessionStorage.setItem("token", data.jwt);
     sessionStorage.setItem("user", JSON.stringify(data.user));
-    document.getElementById("register-modal").style.display = "none";
+    closeModal(document.getElementById("register-modal"));
     userUI(data.user);
     toastr.success("Registrering lyckades! Du är nu inloggad.");
     setTimeout(() => {
@@ -163,27 +162,35 @@ const checkLogin = () => {
     const userControls = document.getElementById("user-controls");
     if (userControls) {
       userControls.innerHTML = `
-                <button id="login-btn" class="btn btn-primary">Logga in</button>
-                <button id="register-btn" class="btn btn-primary">Skapa ett konto</button>
+                <button id="login-btn" class="btn">Logga in</button>
+                <button id="register-btn" class="btn btn-primary">Skapa konto</button>
             `;
       initModals();
     }
   }
 };
 
+// Svensk genitiv: "Anna" -> "Annas", "Alex" -> "Alex"
+const possessive = (name) => (/[sxz]$/i.test(name) ? name : `${name}s`);
+
 const userUI = (user) => {
   const userControls = document.getElementById("user-controls");
   if (userControls) {
-    userControls.innerHTML = `
-            ${
-              isHomePage()
-                ? `<span>Välkommen till bokklubben <strong>${user.username}</strong>!</span> <a href="${pageUrl("user/profile.html")}" class="btn btn-primary">Min profil</a>`
-                : `<span><strong>${user.username}</strong>´s profilsida</span> <a href="${pageUrl("index.html")}" class="btn btn-primary">Till förstasidan</a>`
-            }
-            <button id="logout-btn" class="btn btn-primary">Logga ut</button>
-        `;
+    const name = el("strong", null, user.username);
+    const greeting = el("span", "greeting");
+    const navLink = el("a", "btn");
+    if (isHomePage()) {
+      greeting.append("Välkommen, ", name);
+      navLink.href = pageUrl("user/profile.html");
+      navLink.textContent = "Min profil";
+    } else {
+      greeting.append(el("strong", null, possessive(user.username)), " profilsida");
+      navLink.href = pageUrl("index.html");
+      navLink.textContent = "Till förstasidan";
+    }
+    const logoutBtn = el("button", "btn btn-primary", "Logga ut", { id: "logout-btn" });
+    userControls.replaceChildren(greeting, " ", navLink, " ", logoutBtn);
 
-    const logoutBtn = document.getElementById("logout-btn");
     logoutBtn.addEventListener("click", () => {
       Api.logout();
       location.reload();

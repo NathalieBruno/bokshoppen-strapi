@@ -66,6 +66,14 @@ Strapi startar på `http://localhost:1337`. Första gången skapar du ett admink
 
 Öppna projektmappen i VS Code och starta **Live Server** på `frontend/index.html`.
 
+**3. Ändra stilar (valfritt)**
+
+Stilarna skrivs i `frontend/style/*.scss` och kompileras till `frontend/style/style.css` (som sidorna läser):
+
+```bash
+sass frontend/style/style.scss frontend/style/style.css
+```
+
 ## 📁 Struktur
 
 ```
@@ -74,8 +82,10 @@ book-ducks-uppgift/
 ├── frontend/         🖥️ Webbplatsen
 │   ├── index.html    🏠 Startsida
 │   ├── user/         👤 Profilsida
+│   ├── components/   🧩 Återanvändbara moduler (bokkort, betygsväljare, dialoger, sidfot, formulärfel)
+│   ├── style/        🎨 SCSS i partials (tokens, base, header, books, modal, profile, footer)
 │   ├── api.js        🔌 Anrop mot Strapi (och demoläge)
-│   ├── theme.js      🎨 Teman
+│   ├── theme.js      🌤️ Årstidsteman (vår, sommar, höst)
 │   └── demo/         📦 Bokdata och omslag för demon
 └── netlify.toml      ☁️ Netlify-inställningar
 ```

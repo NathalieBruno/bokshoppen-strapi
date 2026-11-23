@@ -1,0 +1,200 @@
+// Bokrutnät och bokkort (startsidan och profilsidan delar samma kort).
+#books-container,
+#wishlist-container,
+#ratings-container {
+  display: grid;
+  gap: 2rem 1.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+  padding-bottom: 4rem;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: #bdb8a9;
+    box-shadow: 0 8px 24px -12px rgba(30, 42, 35, 0.25);
+  }
+}
+
+// Omslaget visas helt, i fast 2:3-proportion, på en ljus "hylla"
+.book-cover-container {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: var(--shelf);
+}
+
+.book-cover {
+  display: block;
+  width: 100%;
+  max-width: 11rem;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 3px 6px 6px 3px;
+  box-shadow: 0 1px 2px rgba(30, 42, 35, 0.25), 0 10px 18px -8px rgba(30, 42, 35, 0.4);
+}
+
+.book-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.book-title {
+  font-family: var(--font-display);
+  font-size: 1.4375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+.book-author {
+  color: var(--muted);
+}
+
+.book-details {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.book-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+
+  svg {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: var(--star);
+  }
+}
+
+.rating-value {
+  color: var(--star);
+}
+
+.rating-none {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+// Profilsidans "ditt betyg"
+.my-rating {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.my-rating-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--star);
+}
+
+.my-rating-of {
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+// Betygsväljare och åtgärdsknappar under kortets info. Tomma behållare (utloggat läge) tar ingen plats.
+.rating-section-container,
+.button-container {
+  padding: 0 1.5rem 0.75rem;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1.5rem;
+}
+
+.rating-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+.rating-select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 2.25rem 0.5rem 0.875rem;
+  font: inherit;
+  color: var(--ink);
+  background-color: var(--surface);
+  border: 1.5px solid var(--control-line);
+  border-radius: 10px;
+}
+
+.is-saved::before {
+  content: "\2713\00a0" / "";
+}
+
+// Surfplatta/mobil: kortet blir en rad med omslaget till vänster
+@media (max-width: 40rem) {
+  #books-container,
+  #wishlist-container,
+  #ratings-container {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  // Grid i stället för wrap: omslaget behåller sin kolumn även när titeln har långa ord
+  .book-card {
+    display: grid;
+    grid-template-columns: clamp(6.5rem, 30vw, 9rem) minmax(0, 1fr);
+    align-content: start;
+  }
+
+  .book-cover-container {
+    align-items: start;
+    padding: 1rem;
+  }
+
+  .book-info {
+    padding: 1rem 1rem 1.25rem 1.25rem;
+  }
+
+  .book-title {
+    font-size: 1.3125rem;
+    overflow-wrap: anywhere;
+  }
+
+  .rating-section-container,
+  .button-container {
+    grid-column: 1 / -1;
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .button-container {
+    padding-bottom: 1.25rem;
+  }
+}

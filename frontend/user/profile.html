@@ -11,42 +11,82 @@
     <script type="module" src="../api.js"></script>
     <script type="module" src="../user/profile.js"></script>
     <script type="module" src="../login.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
+    />
     <link rel="stylesheet" href="../style/style.css" />
   </head>
   <body>
-    <header>
-      <h1>Lilla Bokshoppen</h1>
-      <div id="user-controls"></div>
+    <a class="skip-link" href="#main">Hoppa till innehållet</a>
+    <header class="site-header">
+      <div class="wrap">
+        <div class="brand"><span class="brand-name">Lilla Bokshoppen</span></div>
+        <div id="user-controls"></div>
+      </div>
     </header>
 
-    <main>
-      <section class="collapsible-section">
-        <div class="section-header" onclick="toggleSection('wishlist')">
-          <h2>Din önskelista</h2>
-          <span class="toggle-icon" id="wishlist-icon">▼</span>
-        </div>
-        <div class="section-content expanded" id="wishlist-content">
-          <div class="sort-controls">
-            <button id="sort-title" class="sort-btn">Sortera titlar (A–Ö)</button>
-            <button id="sort-author" class="sort-btn">Sortera författare (A–Ö)</button>
-          </div>
-          <div id="wishlist-container"></div>
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="wrap">
+          <p class="eyebrow">Din hylla</p>
+          <h1 class="page-title" id="page-title">Din profil</h1>
+          <p class="lead">Böckerna du vill läsa senare och de du har betygsatt, samlade på ett ställe.</p>
         </div>
       </section>
-      <section class="collapsible-section ratings-collapse">
-        <div class="section-header" onclick="toggleSection('ratings')">
-          <h2>Dina betygsatta böcker</h2>
-          <span class="toggle-icon" id="ratings-icon">▼</span>
-        </div>
-        <div class="section-content expanded" id="ratings-content">
-          <div class="sort-controls">
-            <button id="sort-rating-title" class="sort-btn">Sortera titlar (A–Ö)</button>
-            <button id="sort-rating-author" class="sort-btn">Sortera författare (A–Ö)</button>
-            <button id="sort-rating-rating" class="sort-btn">Sortera efter betyg ↓</button>
+      <div class="wrap profile-sections">
+        <section class="shelf-section" aria-labelledby="wishlist-heading">
+          <h2 id="wishlist-heading">
+            <button type="button" class="toggle" aria-expanded="true" aria-controls="wishlist-content" data-section="wishlist">
+              <span><span class="toggle-label">Din önskelista</span><span class="toggle-count" id="wishlist-count"></span></span>
+              <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+            </button>
+          </h2>
+          <div class="section-body" id="wishlist-content">
+            <div class="toolbar" role="group" aria-label="Sortera önskelistan">
+              <span class="toolbar-label">Sortera</span>
+              <span class="chips">
+                <button type="button" id="sort-title" class="chip-btn" aria-pressed="false">Titel A–Ö</button>
+                <button type="button" id="sort-author" class="chip-btn" aria-pressed="false">Författare A–Ö</button>
+              </span>
+            </div>
+            <div id="wishlist-container"></div>
           </div>
-          <div id="ratings-container"></div>
-        </div>
-      </section>
+        </section>
+        <section class="shelf-section" aria-labelledby="ratings-heading">
+          <h2 id="ratings-heading">
+            <button type="button" class="toggle" aria-expanded="true" aria-controls="ratings-content" data-section="ratings">
+              <span><span class="toggle-label">Dina betygsatta böcker</span><span class="toggle-count" id="ratings-count"></span></span>
+              <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+            </button>
+          </h2>
+          <div class="section-body" id="ratings-content">
+            <div class="toolbar" role="group" aria-label="Sortera betygsatta böcker">
+              <span class="toolbar-label">Sortera</span>
+              <span class="chips">
+                <button type="button" id="sort-rating-title" class="chip-btn" aria-pressed="false">Titel A–Ö</button>
+                <button type="button" id="sort-rating-author" class="chip-btn" aria-pressed="false">Författare A–Ö</button>
+                <button type="button" id="sort-rating-rating" class="chip-btn" aria-pressed="false">Högst betyg först</button>
+              </span>
+            </div>
+            <div id="ratings-container"></div>
+          </div>
+        </section>
+      </div>
     </main>
+
+    <dialog id="confirm-modal" class="modal" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+      <div class="modal-inner">
+        <button type="button" class="close" aria-label="Stäng">&times;</button>
+        <h2 id="confirm-title">Ta bort boken?</h2>
+        <p class="modal-sub" id="confirm-text" data-confirm-text></p>
+        <div class="confirm-actions">
+          <button type="button" class="btn" data-cancel>Avbryt</button>
+          <button type="button" class="btn btn-danger-solid" data-confirm-ok>Ta bort</button>
+        </div>
+      </div>
+    </dialog>
   </body>
 </html>

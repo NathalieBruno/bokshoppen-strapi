@@ -1,0 +1,47 @@
+// Designtokens. All färg, typografi och måttsättning utgår härifrån.
+// Kontrast (WCAG 2.2 AA) är uträknad mot alla tre årstidsbakgrunder:
+//   --ink 12–15:1 · --muted 5,4–6,4:1 · --green 6,8–8,1:1 · --star 5,2–6,1:1 · vit text på --green 8,2:1
+:root {
+  // Bakgrund (sommar är standard; vår och höst byts via data-season på <html>)
+  --bg: #e9f0f2;
+  --surface: #fffdf9;
+  --shelf: #f3eee4; // panel bakom bokomslag
+  --line: #d9d5ca;
+
+  // Text och kontroller
+  --ink: #1e2a23;
+  --muted: #56605a;
+  --control-line: #6b756f; // kant på formulärfält (≥3:1)
+  --focus: #1b3b8f;
+
+  // Accenter
+  --green: #35563f;
+  --green-dark: #2a4533;
+  --star: #9a4a1c; // betyg
+  --danger: #a32a1e;
+  --danger-dark: #831f15;
+
+  // Typografi
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  // Form
+  --radius: 14px;
+  --gutter: 1.5rem;
+
+  color-scheme: light;
+}
+
+:root[data-season="spring"] {
+  --bg: #eef3e6;
+}
+
+:root[data-season="autumn"] {
+  --bg: #f4e8da;
+}
+
+@media (max-width: 40rem) {
+  :root {
+    --gutter: 1rem;
+  }
+}
