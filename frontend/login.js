@@ -65,7 +65,7 @@ const addDemoLoginButton = () => {
   wrapper.append(
     el("div", "divider", "eller", { "aria-hidden": "true" }),
     demoButton,
-    el("p", "demo-hint", "Demoversion. Dina betyg och din önskelista sparas bara i din webbläsare.")
+    el("p", "demo-hint", "Demoversion. Dina betyg och dina sparade böcker sparas bara i din webbläsare.")
   );
   loginForm.after(wrapper);
   demoButton.addEventListener("click", handleDemoLogin);

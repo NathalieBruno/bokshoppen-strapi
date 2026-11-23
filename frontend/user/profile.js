@@ -28,7 +28,7 @@ const lists = {
     activeSort: null,
     container: "wishlist-container",
     count: "wishlist-count",
-    empty: "Din önskelista är tom.",
+    empty: "Du har inga sparade böcker.",
     createCard: (item) => createWishlistCard(item),
     sortButtons: { title: "sort-title", author: "sort-author" },
   },
@@ -98,7 +98,7 @@ confirmModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
   button.addEventListener("click", () => closeModal(confirmModal));
 });
 
-// "Jag har läst boken": betyget sparas, boken tas bort från önskelistan och listorna laddas om.
+// "Jag har läst boken": betyget sparas, boken tas bort från sparade böcker och listorna laddas om.
 const readModal = document.getElementById("read-modal");
 closeOnBackdropClick(readModal);
 readModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
@@ -107,7 +107,7 @@ readModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
 
 const markAsRead = (item) => {
   const user = JSON.parse(sessionStorage.getItem("user"));
-  document.getElementById("read-text").textContent = `Betygsätt ”${item.book.title}” så flyttas den från önskelistan till dina lästa böcker.`;
+  document.getElementById("read-text").textContent = `Betygsätt ”${item.book.title}” så flyttas den från dina sparade till dina lästa böcker.`;
   document.getElementById("read-rating").replaceChildren(
     createRatingSelect(null, async (rating) => {
       let saved = false;
@@ -123,7 +123,7 @@ const markAsRead = (item) => {
       const removed = await Api.deleteWishlistItem(item.documentId);
       closeModal(readModal);
       if (removed) toastr.success("Boken är flyttad till dina lästa böcker!");
-      else toastr.warning("Betyget sparades, men boken kunde inte tas bort från önskelistan");
+      else toastr.warning("Betyget sparades, men boken kunde inte tas bort från sparade böcker");
       await loadBooks();
     })
   );
@@ -139,7 +139,7 @@ const createWishlistCard = (item) => {
   removeBtn.append(el("span", "sr-only", `: ${item.book.title}`));
 
   removeBtn.addEventListener("click", async () => {
-    const confirmed = await confirmDialog(confirmModal, `”${item.book.title}” tas bort från din önskelista.`);
+    const confirmed = await confirmDialog(confirmModal, `”${item.book.title}” tas bort från dina sparade böcker.`);
     if (!confirmed) return;
 
     if (await Api.deleteWishlistItem(item.documentId)) {
