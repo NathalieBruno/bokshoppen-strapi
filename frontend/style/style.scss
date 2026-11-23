@@ -1,3 +1,5 @@
 // Stilarna är uppdelade i partials. Kompilera med:
 //   sass frontend/style/style.scss frontend/style/style.css
+@use "tokens";
+@use "base";
 @use "legacy";
