@@ -1,4 +1,5 @@
 import { Api, DEMO_MODE } from "./api.js";
+import { mountFooter } from "./components/siteFooter.js";
 // Årstidstemat styr bakgrundsfärgen via data-season på <html> (färgerna ligger i style/_tokens.scss).
 const THEME_LABELS = { spring: "Vår", summer: "Sommar", autumn: "Höst" };
 const isTheme = (key) => Object.hasOwn(THEME_LABELS, key);
@@ -29,32 +30,19 @@ const paintTheme = (key) => {
   });
 };
 
-const addThemeSwitcher = () => {
-  if (document.querySelector(".site-footer")) return;
-  const footer = document.createElement("footer");
-  footer.className = "site-footer";
-  footer.innerHTML = `
-    <div class="theme-switcher" role="group" aria-labelledby="theme-switcher-label">
-      <span class="theme-switcher-label" id="theme-switcher-label">Tema</span>
-      <span class="theme-switcher-options">
-        ${Object.keys(THEME_LABELS)
-          .map((key) => `<button type="button" data-theme="${key}" aria-pressed="false">${THEME_LABELS[key]}</button>`)
-          .join("")}
-      </span>
-      <span class="theme-switcher-note">Demoversion – temat styrs normalt via Strapi CMS.</span>
-    </div>
-  `;
-  footer.addEventListener("click", (e) => {
-    const key = e.target.dataset?.theme;
-    if (!isTheme(key)) return;
-    setDemoThemeChoice(key);
-    paintTheme(key);
-  });
-  document.body.classList.add("has-site-footer");
-  document.body.append(footer);
-};
-
 const applyTheme = async () => {
+  mountFooter({
+    themeSwitcher: DEMO_MODE
+      ? {
+          labels: THEME_LABELS,
+          onSelect: (choice) => {
+            setDemoThemeChoice(choice);
+            paintTheme(choice);
+          },
+        }
+      : undefined,
+  });
+
   let key = "summer";
   const data = await Api.getTheme();
 
@@ -68,7 +56,6 @@ const applyTheme = async () => {
 
   if (DEMO_MODE) {
     key = getDemoThemeChoice() || key;
-    addThemeSwitcher();
   }
 
   paintTheme(key);
