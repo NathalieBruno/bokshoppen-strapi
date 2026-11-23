@@ -85,6 +85,11 @@
   }
 }
 
+.rating-label {
+  color: var(--muted);
+  font-weight: 400;
+}
+
 .rating-value {
   color: var(--star);
 }

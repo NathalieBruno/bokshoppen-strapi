@@ -14,15 +14,17 @@ const createStarIcon = () => {
 };
 
 /**
- * Fyller betygsraden med stjärna och snittbetyg, t.ex. "★ 7.7/10", eller "Saknar betyg".
+ * Fyller betygsraden med synlig etikett och snittbetyg, t.ex. "Snittbetyg 7.7/10 ★", eller "Snittbetyg saknas".
  * Används både vid första renderingen och när snittbetyget uppdateras efter en röst.
- * Skärmläsare får "Snittbetyg: …"; stjärnan är dekorativ.
+ * Stjärnan är dekorativ (aria-hidden); etiketten är synlig för alla.
  */
 export const renderAvgRating = (ratingEl, avgRating) => {
-  ratingEl.replaceChildren(createStarIcon(), el("span", "sr-only", "Snittbetyg: "));
-  ratingEl.append(
-    avgRating > 0 ? el("span", "rating-value", `${avgRating}/10`) : el("span", "rating-none", "Saknar betyg")
-  );
+  ratingEl.replaceChildren(el("span", "rating-label", "Snittbetyg"));
+  if (avgRating > 0) {
+    ratingEl.append(el("span", "rating-value", `${avgRating}/10`), createStarIcon());
+  } else {
+    ratingEl.append(el("span", "rating-none", "saknas"));
+  }
 };
 
 /**
