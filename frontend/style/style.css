@@ -234,7 +234,6 @@ a {
   font-size: clamp(2.5rem, 7vw, 4.5rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
-  text-wrap: balance;
 }
 
 .lead {
