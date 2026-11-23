@@ -2,6 +2,7 @@ import { Api, DEMO_MODE, isHomePage, pageUrl } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { el } from "./dom.js";
+import { openModal, closeModal, closeOnBackdropClick } from "./components/modal.js";
 
 function initModals() {
   let loginBtn = document.getElementById("login-btn");
@@ -14,47 +15,40 @@ function initModals() {
 
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      loginModal.style.display = "block";
+      openModal(loginModal);
     });
   }
 
   if (registerBtn) {
     registerBtn.addEventListener("click", () => {
-      registerModal.style.display = "block";
+      openModal(registerModal);
     });
   }
 
   if (showRegisterLink) {
     showRegisterLink.addEventListener("click", (e) => {
       e.preventDefault();
-      loginModal.style.display = "none";
-      registerModal.style.display = "block";
+      closeModal(loginModal);
+      openModal(registerModal);
     });
   }
 
   if (showLoginLink) {
     showLoginLink.addEventListener("click", (e) => {
       e.preventDefault();
-      registerModal.style.display = "none";
-      loginModal.style.display = "block";
+      closeModal(registerModal);
+      openModal(loginModal);
     });
   }
 
   closeButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      loginModal.style.display = "none";
-      registerModal.style.display = "none";
+      closeModal(loginModal);
+      closeModal(registerModal);
     });
   });
 
-  window.addEventListener("click", (e) => {
-    if (e.target === loginModal) {
-      loginModal.style.display = "none";
-    }
-    if (e.target === registerModal) {
-      registerModal.style.display = "none";
-    }
-  });
+  [loginModal, registerModal].forEach((dialog) => dialog && closeOnBackdropClick(dialog));
 
   authForms();
   addDemoLoginButton();
@@ -79,7 +73,7 @@ const handleDemoLogin = async () => {
   const data = await Api.login();
   sessionStorage.setItem("token", data.jwt);
   sessionStorage.setItem("user", JSON.stringify(data.user));
-  document.getElementById("login-modal").style.display = "none";
+  closeModal(document.getElementById("login-modal"));
   userUI(data.user);
   toastr.success("Du är nu inloggad med demokontot - välkommen!");
   setTimeout(() => {
@@ -118,7 +112,7 @@ const handleLogin = async (e) => {
     let data = await Api.login(email, password);
     sessionStorage.setItem("token", data.jwt);
     sessionStorage.setItem("user", JSON.stringify(data.user));
-    document.getElementById("login-modal").style.display = "none";
+    closeModal(document.getElementById("login-modal"));
     userUI(data.user);
     toastr.success("Du loggas nu in - välkommen!");
     setTimeout(() => {
@@ -141,7 +135,7 @@ const handleRegister = async (event) => {
     let data = await Api.register(username, email, password);
     sessionStorage.setItem("token", data.jwt);
     sessionStorage.setItem("user", JSON.stringify(data.user));
-    document.getElementById("register-modal").style.display = "none";
+    closeModal(document.getElementById("register-modal"));
     userUI(data.user);
     toastr.success("Registrering lyckades! Du är nu inloggad.");
     setTimeout(() => {
