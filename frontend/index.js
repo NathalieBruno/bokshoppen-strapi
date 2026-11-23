@@ -2,6 +2,7 @@ import { Api } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { createBookCard, formatAvgRating } from "./components/bookCard.js";
+import { createRatingSelect } from "./components/ratingSelect.js";
 
 await Api.isLoggedIn();
 
@@ -43,36 +44,6 @@ const buildCard = async (book) => {
     actions: [createWishlistButton(alreadyInWishlist, () => Api.addToWishlist(user.documentId, book.documentId))],
   });
   return card;
-};
-
-const createRatingSelect = (currentRating, onRate) => {
-  const wrapper = document.createElement("div");
-  wrapper.className = "rating-container";
-  wrapper.innerHTML = `
-      <div class="rating-section">
-        <label>Ge boken ett betyg:</label>
-        <select class="rating-select">
-          <option value="">Välj betyg</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
-      </div>
-    `;
-  const select = wrapper.querySelector(".rating-select");
-  if (currentRating) select.value = currentRating;
-  select.addEventListener("change", (e) => {
-    const rating = parseInt(e.target.value);
-    if (rating) onRate(rating);
-  });
-  return wrapper;
 };
 
 const createWishlistButton = (alreadyInWishlist, onAdd) => {
