@@ -15,7 +15,7 @@ export const mountFooter = ({ themeSwitcher } = {}) => {
 
   const brand = el("div", "footer-brand");
   brand.append(
-    el("p", "footer-name", "Lilla Bokshoppen"),
+    el("p", "footer-name", "Bokateljén"),
     el("p", null, "Bokklubben där vi läser, betygsätter och tipsar varandra om nästa bok.")
   );
 
@@ -36,7 +36,7 @@ export const mountFooter = ({ themeSwitcher } = {}) => {
 
   const base = el("div", "footer-base");
   const baseWrap = el("div", "wrap");
-  baseWrap.append(el("span", null, `© ${new Date().getFullYear()} Lilla Bokshoppen`));
+  baseWrap.append(el("span", null, `© ${new Date().getFullYear()} Bokateljén`));
   if (themeSwitcher) baseWrap.append(el("span", null, "Demoversion"));
   base.append(baseWrap);
 
