@@ -26,11 +26,10 @@ body:not(.landing) .site-header {
   gap: 0.75rem;
 }
 
-// Loggan är en länk till startsidan: ikon + namn
+// Loggan är en länk till startsidan: bara namnet, satt i glesa versaler
 .brand-link {
   display: inline-flex;
-  align-items: center; // namnet centreras mot ikonens mitt
-  gap: 0.5rem;
+  align-items: center;
   min-height: 2.75rem;
   color: inherit;
   text-decoration: none;
@@ -42,34 +41,27 @@ body:not(.landing) .site-header {
   }
 }
 
-.brand-icon {
-  flex: none;
-  width: 1.5rem;
-  height: 1.5rem;
-  fill: none;
-  stroke: var(--green);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.brand-name {
+// Ordmärket delas av sidhuvudet och sidfoten. Versalerna sätts med CSS, så texten i HTML är vanlig text.
+.brand-name,
+.site-footer .footer-name {
   font-family: var(--font-display);
-  font-size: 1.625rem;
+  font-size: 1.1875rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 
 .demo-badge {
-  padding: 0.125rem 0.625rem;
-  border: 1px solid var(--green);
+  padding: 0 0.5rem;
+  border: 1px solid var(--control-line);
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--green);
+  color: var(--muted);
 }
 
 #user-controls {
