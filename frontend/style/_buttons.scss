@@ -59,3 +59,30 @@
 .btn-block {
   width: 100%;
 }
+
+// Diskret knapp för bokkort: lägre, mindre rundad, med ikon i samma storlek som texten
+.btn-compact {
+  min-height: 2.5rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+
+  svg {
+    flex: none;
+    width: 1.0625rem;
+    height: 1.0625rem;
+  }
+}
+
+// Tyst knapp utan kant ("Jag har läst boken")
+.btn-quiet {
+  border-color: transparent;
+  font-weight: 500;
+}
+
+@media (max-width: 40rem) {
+  .btn-compact {
+    min-height: 2.75rem;
+  }
+}

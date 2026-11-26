@@ -1,31 +1,47 @@
 import { imageUrl } from "../api.js";
 import { el } from "../dom.js";
+import { createIcon } from "./icons.js";
 
-const SVG_NS = "http://www.w3.org/2000/svg";
+// Snittbetyg visas med svenskt decimalkomma, t.ex. 7,7.
+const formatRating = (value) => String(value).replace(".", ",");
 
-const createStarIcon = () => {
-  const svg = document.createElementNS(SVG_NS, "svg");
-  svg.setAttribute("viewBox", "0 0 20 20");
-  svg.setAttribute("aria-hidden", "true");
-  const path = document.createElementNS(SVG_NS, "path");
-  path.setAttribute("d", "M10 1.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L1.4 7.8l6-.8z");
-  svg.append(path);
-  return svg;
+/**
+ * Fyller betygsraden med stjärna och snittbetyg, t.ex. "★ 7,7/10 snittbetyg", eller "Snittbetyg saknas".
+ * Används både vid första renderingen och när snittbetyget uppdateras efter en röst.
+ * Stjärnan är dekorativ (aria-hidden); texten "snittbetyg" står alltid med.
+ */
+export const renderAvgRating = (ratingEl, avgRating) => {
+  if (!(avgRating > 0)) {
+    ratingEl.replaceChildren(el("span", "rating-none", "Snittbetyg saknas"));
+    return;
+  }
+  const text = el("span");
+  text.append(el("b", "rating-value", `${formatRating(avgRating)}/10`), " ", el("span", "rating-suffix", "snittbetyg"));
+  ratingEl.replaceChildren(createIcon("star"), text);
+};
+
+const STATUS = {
+  saved: { icon: "bookmark", label: "sparad" },
+  read: { icon: "check", label: "läst" },
 };
 
 /**
- * Fyller betygsraden med synlig etikett och snittbetyg, t.ex. "Snittbetyg 7.7/10 ★", eller "Snittbetyg saknas".
- * Används både vid första renderingen och när snittbetyget uppdateras efter en röst.
- * Stjärnan är dekorativ (aria-hidden); etiketten är synlig för alla.
+ * Fyller titelrubriken: en diskret statusikon till höger på första raden (bara för sparad eller läst)
+ * och bokens titel. Ikonen är dold för skärmläsare; i stället läggs statusen till som dold text efter
+ * titeln ("En avlägsen kust (sparad)"). Platsen för ikonen är reserverad i alla kort, så titeln bryts
+ * likadant oavsett status.
  */
-export const renderAvgRating = (ratingEl, avgRating) => {
-  ratingEl.replaceChildren(el("span", "rating-label", "Snittbetyg"));
-  if (avgRating > 0) {
-    ratingEl.append(el("span", "rating-value", `${avgRating}/10`), createStarIcon());
-  } else {
-    ratingEl.append(el("span", "rating-none", "saknas"));
-  }
+const renderTitle = (titleEl, title, status) => {
+  const info = STATUS[status];
+  titleEl.replaceChildren();
+  if (info) titleEl.append(el("span", "status-mark", null, { "aria-hidden": "true" }));
+  if (info) titleEl.firstChild.append(createIcon(info.icon));
+  titleEl.append(document.createTextNode(title));
+  if (info) titleEl.append(el("span", "sr-only", ` (${info.label})`));
 };
+
+/** Uppdaterar statusikonen på ett befintligt kort. status: "saved", "read" eller undefined. */
+export const setBookStatus = (card, book, status) => renderTitle(card.querySelector(".book-title"), book.title, status);
 
 /**
  * Bygger ett bokkort. Komponenten gör inga API-anrop – all data och alla
@@ -39,17 +55,20 @@ export const renderAvgRating = (ratingEl, avgRating) => {
  * @param {HTMLElement|null} [options.ratingSection]  Betygsväljare; null ger en tom behållare
  * @param {HTMLElement[]} [options.actions]    Knappar längst ned; [] ger en tom behållare
  * @param {number} [options.headingLevel]  Nivå på titelrubriken (2 på startsidan, 3 under sektionsrubriker)
+ * @param {"saved"|"read"} [options.status]  Statusikon vid titeln (ingen ikon för övriga böcker)
  * @returns {HTMLElement} kortet; betygsraden har klassen .book-rating
  */
-export const createBookCard = (book, { loggedIn = true, avgRating, ratingLine, ratingSection, actions, headingLevel = 2 } = {}) => {
+export const createBookCard = (book, { loggedIn = true, avgRating, ratingLine, ratingSection, actions, headingLevel = 2, status } = {}) => {
   const card = el("article", loggedIn ? "book-card logged-in" : "book-card logged-out");
 
   const cover = el("div", "book-cover-container");
   cover.append(el("img", "book-cover", null, { src: imageUrl(book), alt: `Omslag: ${book.title}` }));
 
   const info = el("div", "book-info");
+  const titleEl = el(`h${headingLevel}`, "book-title");
+  renderTitle(titleEl, book.title, status);
   info.append(
-    el(`h${headingLevel}`, "book-title", book.title),
+    titleEl,
     el("p", "book-author", book.author),
     el("p", "book-details", `${book.pages} sidor · ${String(book.publicationDate).slice(0, 4)}`)
   );

@@ -111,11 +111,11 @@ const markAsRead = (item) => {
 };
 
 const createWishlistCard = (item) => {
-  const readBtn = el("button", "btn btn-primary btn-block", "Jag har läst boken", { type: "button" });
+  const readBtn = el("button", "btn btn-compact btn-primary btn-block", "Jag har läst boken", { type: "button" });
   readBtn.append(el("span", "sr-only", `: ${item.book.title}`));
   readBtn.addEventListener("click", () => markAsRead(item));
 
-  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort från listan", { type: "button" });
+  const removeBtn = el("button", "btn btn-compact btn-danger btn-block", "Ta bort från listan", { type: "button" });
   removeBtn.append(el("span", "sr-only", `: ${item.book.title}`));
 
   removeBtn.addEventListener("click", async () => {
@@ -138,7 +138,7 @@ const createWishlistCard = (item) => {
 
 const createRatingCard = (item) => {
   const { book, rating } = item;
-  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort boken", { type: "button" });
+  const removeBtn = el("button", "btn btn-compact btn-danger btn-block", "Ta bort boken", { type: "button" });
   removeBtn.append(el("span", "sr-only", `: ${book.title}`));
 
   removeBtn.addEventListener("click", async () => {

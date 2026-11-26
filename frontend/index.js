@@ -2,7 +2,8 @@ import { Api } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { el } from "./dom.js";
-import { createBookCard, renderAvgRating } from "./components/bookCard.js";
+import { createBookCard, renderAvgRating, setBookStatus } from "./components/bookCard.js";
+import { createIcon } from "./components/icons.js";
 import { openReadDialog } from "./components/readDialog.js";
 
 await Api.isLoggedIn();
@@ -36,15 +37,25 @@ const buildCard = async (book) => {
   // En bok är antingen läst (betygsatt) eller sparad ("Läs senare"). Kortets knappar följer det tillståndet.
   const state = { rating: userRating?.rating ?? null, wishlistItem };
   const card = createBookCard(book, { avgRating, actions: [] });
+  // Alla kort har samma åtgärdsyta (två rader), så primärknapp och statusplatta hamnar på samma höjd.
+  card.querySelector(".button-container").classList.add("button-container--fixed");
   renderActions(card, book, user, state);
   return card;
 };
 
-const bookButton = (className, label, book, onClick) => {
-  const button = el("button", className, label, { type: "button" });
-  button.append(el("span", "sr-only", `: ${book.title}`));
+const bookButton = (className, label, book, onClick, icon) => {
+  const button = el("button", `btn btn-compact ${className}`, null, { type: "button" });
+  if (icon) button.append(createIcon(icon));
+  button.append(label, el("span", "sr-only", `: ${book.title}`));
   button.addEventListener("click", onClick);
   return button;
+};
+
+// Statusplatta i stället för knapp (samma plats som primärknappen).
+const statusPlate = (...content) => {
+  const plate = el("p", "card-plate", null, { tabindex: "-1" });
+  plate.append(...content);
+  return plate;
 };
 
 const renderActions = (card, book, user, state) => {
@@ -55,12 +66,15 @@ const renderActions = (card, book, user, state) => {
     container.firstElementChild?.focus();
   };
 
+  // Statusikonen vid titeln: bokmärke för sparad, bock för läst, ingen ikon för övriga.
+  setBookStatus(card, book, state.rating ? "read" : state.wishlistItem ? "saved" : undefined);
+
   if (state.rating) {
-    container.replaceChildren(el("p", "card-status", `Läst · ditt betyg ${state.rating}`, { tabindex: "-1" }));
+    container.replaceChildren(statusPlate("Läst · ditt betyg ", el("b", null, `${state.rating}/10`)));
     return;
   }
 
-  const readButton = bookButton("btn btn-block", "Jag har läst boken", book, () =>
+  const readButton = bookButton("btn-quiet", "Jag har läst boken", book, () =>
     openReadDialog({
       book,
       userId: user.documentId,
@@ -76,21 +90,27 @@ const renderActions = (card, book, user, state) => {
   );
 
   if (state.wishlistItem) {
-    container.replaceChildren(el("p", "card-status", "Sparad", { tabindex: "-1" }), readButton);
+    container.replaceChildren(statusPlate("Sparad"), readButton);
     return;
   }
 
-  const saveButton = bookButton("btn btn-primary btn-block", "Läs senare", book, async () => {
-    saveButton.disabled = true;
-    const item = await Api.addToWishlist(user.documentId, book.documentId);
-    if (!item) {
-      saveButton.disabled = false;
-      return toastr.error("Kunde inte spara boken, försök igen");
-    }
-    toastr.success("Boken tillagd");
-    state.wishlistItem = item;
-    rerender();
-  });
+  const saveButton = bookButton(
+    "btn-primary",
+    "Läs senare",
+    book,
+    async () => {
+      saveButton.disabled = true;
+      const item = await Api.addToWishlist(user.documentId, book.documentId);
+      if (!item) {
+        saveButton.disabled = false;
+        return toastr.error("Kunde inte spara boken, försök igen");
+      }
+      toastr.success("Boken tillagd");
+      state.wishlistItem = item;
+      rerender();
+    },
+    "bookmark"
+  );
   container.replaceChildren(saveButton, readButton);
 };
 
