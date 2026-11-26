@@ -334,7 +334,7 @@ body:not(.landing) .site-header {
   overflow: hidden;
   background: var(--card);
   border: 1px solid var(--card-line);
-  border-radius: var(--radius);
+  border-radius: 8px;
   box-shadow: 0 10px 24px -18px rgba(30, 42, 35, 0.45);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
