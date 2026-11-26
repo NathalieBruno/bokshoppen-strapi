@@ -1,4 +1,4 @@
-# 📚 Lilla Bokshoppen
+# 📚 Bokateljén
 
 En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem som sparade böcker.
 

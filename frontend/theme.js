@@ -23,11 +23,27 @@ const setDemoThemeChoice = (key) => {
   }
 };
 
+// Senast visade årstiden sparas, så att nästa sida får rätt färg direkt medan temat hämtas.
+const LAST_THEME_KEY = "bookducks-last-theme";
+const getLastTheme = () => {
+  try {
+    const key = localStorage.getItem(LAST_THEME_KEY);
+    return isTheme(key) ? key : null;
+  } catch (e) {
+    return null;
+  }
+};
+
 const paintTheme = (key) => {
   document.documentElement.dataset.season = key;
   document.querySelectorAll(".theme-switcher button").forEach((btn) => {
     btn.setAttribute("aria-pressed", String(btn.dataset.theme === key));
   });
+  try {
+    localStorage.setItem(LAST_THEME_KEY, key);
+  } catch (e) {
+    // localStorage blockerad – nästa sida börjar med standardtemat
+  }
 };
 
 const applyTheme = async () => {
@@ -42,6 +58,9 @@ const applyTheme = async () => {
         }
       : undefined,
   });
+
+  const cached = (DEMO_MODE && getDemoThemeChoice()) || getLastTheme();
+  if (cached) paintTheme(cached);
 
   let key = "summer";
   const data = await Api.getTheme();
