@@ -89,22 +89,14 @@
   }
 }
 
-// Borttagning: dämpad text (6,4:1) med en mjuk röd ikon, så den inte tar kortets fokus. Full röd färg
-// (7,1:1) först vid hovring och tangentbordsfokus, så det ändå är tydligt vad som händer.
+// Borttagning: dämpad tegelröd text och ikon i samma färg (inte skrikande röd). Lite starkare röd vid
+// hovring och tangentbordsfokus, så det är tydligt vad som händer precis innan man klickar.
 .btn-text--danger {
-  color: var(--muted);
-
-  svg {
-    color: var(--danger-soft);
-  }
+  color: var(--danger-muted);
 
   &:hover,
   &:focus-visible {
     color: var(--danger);
-
-    svg {
-      color: var(--danger);
-    }
   }
 }
 

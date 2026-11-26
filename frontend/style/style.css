@@ -15,7 +15,7 @@
   --star: #9a4a1c;
   --danger: #a32a1e;
   --danger-dark: #831f15;
-  --danger-soft: #b5483c;
+  --danger-muted: #984b40;
   --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --radius: 14px;
@@ -271,15 +271,9 @@ a {
 }
 
 .btn-text--danger {
-  color: var(--muted);
-}
-.btn-text--danger svg {
-  color: var(--danger-soft);
+  color: var(--danger-muted);
 }
 .btn-text--danger:hover, .btn-text--danger:focus-visible {
-  color: var(--danger);
-}
-.btn-text--danger:hover svg, .btn-text--danger:focus-visible svg {
   color: var(--danger);
 }
 
