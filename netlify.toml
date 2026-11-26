@@ -1,2 +1,9 @@
 [build]
   publish = "frontend"
+
+# Landningssidan visas på startadressen. Katalogen ligger kvar på /index.html.
+[[redirects]]
+  from = "/"
+  to = "/welcome.html"
+  status = 200
+  force = true
