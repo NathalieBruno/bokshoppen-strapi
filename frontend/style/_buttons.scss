@@ -75,17 +75,23 @@
   }
 }
 
-// Textåtgärd: understruken, färgad text utan fyllning eller kant. Känns klickbar men inte som en yta.
+// Textåtgärd: färgad text utan fyllning eller kant. Understrykning vid hovring och tangentbordsfokus; på
+// pekskärmar (där hovring saknas) är den alltid understruken så att det syns att den går att trycka på.
 .btn-text {
   border-color: transparent;
   font-weight: 500;
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background: transparent;
-    text-decoration-thickness: 2px;
+    text-decoration: underline;
+  }
+
+  @media (hover: none) {
+    text-decoration: underline;
   }
 }
 

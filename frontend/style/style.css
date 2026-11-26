@@ -261,13 +261,18 @@ a {
 .btn-text {
   border-color: transparent;
   font-weight: 500;
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }
-.btn-text:hover {
+.btn-text:hover, .btn-text:focus-visible {
   background: transparent;
-  text-decoration-thickness: 2px;
+  text-decoration: underline;
+}
+@media (hover: none) {
+  .btn-text {
+    text-decoration: underline;
+  }
 }
 
 .btn-text--danger {
