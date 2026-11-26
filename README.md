@@ -101,7 +101,7 @@ Gå till **Content Manager**:
 
 Starta Live Server på `frontend/index.html`. Har du tidigare använt `?demo=1` i samma flik lägger du till `?demo=0` för att byta tillbaka till Strapi.
 
-### Ändra stilarna
+### Kompilera SCSS (bara vid ändringar i stilarna)
 
 Du behöver bara det här steget om du ändrar i SCSS-filerna. Webbläsaren läser den kompilerade filen `style.css`, så kompilera om efter varje ändring:
 
