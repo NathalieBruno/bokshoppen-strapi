@@ -1,54 +1,68 @@
 # 📚 Bokateljén
 
-En liten bokklubb där du kan bläddra bland månadens böcker, betygsätta dem och spara dem som sparade böcker.
+En liten bokklubb där du kan bläddra bland månadens böcker, spara dem du vill läsa och betygsätta dem du har läst.
 
-## Syfte
+🌐 **[Testa live-demon](https://bokshoppen-strapi.netlify.app/)** (inget konto eller installation behövs)
 
-Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan användas som backend för en egen frontend. Administratören lägger in och ändrar böcker och tema i Strapi, medan besökare kan betygsätta böckerna och spara dem som sparade böcker.
+![Landningssidan med rubriken Berättelser värda att dela och ett foto av böcker på en marmorhylla](docs/images/landningssida.jpg)
+
+| Katalogen | Min profil |
+| :---: | :---: |
+| ![Katalogen med månadens böcker, med omslag och snittbetyg](docs/images/katalog.jpg) | ![Profilsidan med fyra sparade böcker och sorteringsknappar](docs/images/profil.jpg) |
+
+## Om projektet
+
+Projektet började som en skoluppgift om att använda ett **headless CMS** (Strapi) som backend till en egen frontend. Därefter har jag vidareutvecklat det med ny design, återanvändbara komponenter och säkrare hantering av data från API:et.
+
+I Strapi lägger administratören in böcker och väljer årstidstema. Besökare kan skapa konto, spara böcker och sätta betyg.
 
 ## Funktioner
 
-- 📖 Bokkatalog med omslag, författare, sidantal och snittbetyg
-- 🔐 Registrering och inloggning, både från landningssidan och från katalogen (samma dialoger)
-- ⭐ Betygsätt böcker (1–10)
-- 🔖 Önskelista med möjlighet att ta bort böcker
-- 🔤 Sortering efter titel, författare och betyg på profilsidan
-- ✅ **Jag har läst boken** finns både på startsidan och i dina sparade böcker: du väljer betyg i en dialog och trycker på Spara, så hamnar boken bland dina lästa och betygsatta böcker. En bok är antingen sparad (Spara bok) eller läst, aldrig båda. Startsidan visar bara snittbetyget. Ditt eget betyg visas, ändras (**Ändra betyg**) och tas bort under Min profil.
-- 🎨 Tre teman (vår, sommar, höst)
+- 📖 **Bokkatalog** med omslag, författare, sidantal, utgivningsår och snittbetyg
+- 🔐 **Konto:** registrera dig eller logga in, från landningssidan eller katalogen
+- 🔖 **Spara bok:** samla böcker som du vill läsa
+- ⭐ **Jag har läst boken:** välj ett betyg (1–10) så flyttas boken till dina lästa böcker. En bok är antingen sparad eller läst, aldrig båda.
+- 👤 **Min profil:** ändra eller ta bort betyg, ta bort sparade böcker och sortera efter titel, författare eller (för lästa böcker) högsta betyg
+- 🎨 **Årstidsteman:** vår, sommar och höst
 
-## Tech stack
+## 🚀 Prova demon
 
-|                        |                                         |
-| ---------------------- | --------------------------------------- |
-| Frontend            | HTML, SCSS/CSS, JavaScript (ES-moduler) |
-| Backend / CMS       | Strapi 5 med SQLite                     |
-| Bibliotek (via CDN) | axios, jQuery, Toastr                   |
-| Hosting av demon    | Netlify                                 |
+1. Öppna [live-demon](https://bokshoppen-strapi.netlify.app/).
+2. Klicka på **Logga in** och sedan **Prova demokontot**.
+3. Klicka på **Spara bok** på en bok.
+4. Klicka på **Jag har läst boken** på en annan, välj ett betyg och klicka på **Spara**.
+5. Öppna **Min profil** och sortera dina böcker.
+6. Byt tema längst ned på sidan.
 
-## Strapi lokalt eller demo
+Demon körs utan Strapi. Den har en fast katalog, och det du sparar finns bara i din egen webbläsare.
 
-Samma frontend kan köras på två sätt:
+## 🛠️ Tech stack
 
-|                          | 💻 Lokalt med Strapi                  | ☁️ Demo på Netlify                                                 |
-| ------------------------ | ------------------------------------- | ------------------------------------------------------------------ |
-| **Data**                 | Hämtas från Strapi (`localhost:1337`) | Fast katalog med 12 böcker i `frontend/demo/`                      |
-| **Böcker och tema**      | Ändras av administratören i Strapi    | Böckerna är fasta, temat byter besökaren själv längst ned på sidan |
-| **Konto**                | Riktig registrering och inloggning    | Knappen **Prova demokontot**                                       |
-| **Betyg och sparade böcker** | Sparas i Strapi                       | Sparas bara i din egen webbläsare                                  |
+| Del                  | Teknik                                 |
+| -------------------- | -------------------------------------- |
+| Frontend             | HTML, SCSS och JavaScript (ES-moduler) |
+| Backend och CMS      | Strapi 5 med SQLite                    |
+| Bibliotek (via CDN)  | axios, jQuery och Toastr               |
+| Publicering av demon | Netlify                                |
 
-Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du det med `?demo=1` (demo utan Strapi) eller `?demo=0` (tvinga Strapi). Inställningar för Netlify finns i `netlify.toml`.
+## 💻 Köra projektet lokalt
 
-## 🚀 Testa demon
+Börja med att hämta koden:
 
-🌐 **Live demo:** [bokshoppen-strapi.netlify.app](https://bokshoppen-strapi.netlify.app/)
+```bash
+git clone https://github.com/NathalieBruno/bokshoppen-strapi.git
+cd bokshoppen-strapi
+```
 
-1. Klicka på **Logga in** och sedan **Try demo account** – du behöver inga uppgifter.
-2. Klicka på **Jag har läst boken** på en bok, välj ett betyg och tryck **Spara**.
-3. Klicka på **Spara bok** för att spara en bok.
-4. Öppna **Min profil** och prova att sortera dina sparade böcker och dina betyg.
-5. Byt tema längst ned på sidan (**Vår**, **Sommar**, **Höst**).
+Frontend behöver en lokal webbserver, till exempel tillägget **Live Server** i VS Code. Det går inte att öppna HTML-filerna direkt från datorn.
 
-## 💻 Köra projektet lokalt (med Strapi)
+Du kan sedan köra projektet på två sätt.
+
+### Alternativ A: utan Strapi (snabbast)
+
+Starta Live Server på `frontend/index.html` och lägg till `?demo=1` sist i adressen. Då körs samma demoläge som i live-demon.
+
+### Alternativ B: med Strapi
 
 Du behöver [Node.js](https://nodejs.org) 18–22.
 
@@ -56,39 +70,63 @@ Du behöver [Node.js](https://nodejs.org) 18–22.
 
 ```bash
 cd backend
-cp .env.example .env     # fyll i egna nycklar
+cp .env.example .env    # byt ut exempelvärdena mot egna hemliga nycklar
 npm install
 npm run develop
 ```
 
-Strapi startar på `http://localhost:1337`. Första gången skapar du ett adminkonto, lägger in böcker och ställer in behörigheter under _Settings → Users & Permissions_.
+Strapi startar på `http://localhost:1337/admin`. Första gången får du skapa ett adminkonto.
 
-**2. Starta frontend**
+**2. Ge rollerna behörigheter**
 
-Öppna projektmappen i VS Code och starta **Live Server** på `frontend/index.html`.
+Gå till **Settings → Users & Permissions plugin → Roles** och kryssa i följande:
 
-**3. Kompilera SCSS (bara vid ändringar i stilarna)**
+| Innehållstyp  | Public | Authenticated                        |
+| ------------- | ------ | ------------------------------------ |
+| Book          | `find` | `find`                               |
+| Theme Setting | `find` | `find`                               |
+| Rating        | `find` | `find`, `create`, `update`, `delete` |
+| Wishlist      | –      | `find`, `create`, `delete`           |
 
-Stilarna skrivs i `frontend/style/*.scss` och kompileras till `frontend/style/style.css` (som sidorna läser):
+Kontrollera också att `Authenticated` får använda `me` under **Users-permissions → User**.
+
+**3. Lägg in innehåll**
+
+Gå till **Content Manager**:
+
+- **Book:** lägg till böcker med titel, författare, sidantal, utgivningsdatum och omslag. Klicka på **Publish**.
+- **Theme Setting:** slå på `IsSpring` för vår eller `IsAutumn` för höst. Annars visas sommartemat. Klicka på **Publish**.
+
+**4. Starta frontend**
+
+Starta Live Server på `frontend/index.html`. Har du tidigare använt `?demo=1` i samma flik lägger du till `?demo=0` för att byta tillbaka till Strapi.
+
+### Kompilera SCSS (bara vid ändringar i stilarna)
+
+Du behöver bara det här steget om du ändrar i SCSS-filerna. Webbläsaren läser den kompilerade filen `style.css`, så kompilera om efter varje ändring:
 
 ```bash
-sass frontend/style/style.scss frontend/style/style.css
+npx sass frontend/style/style.scss frontend/style/style.css
 ```
 
 ## 📁 Struktur
 
 ```
-book-ducks-uppgift/
-├── backend/          Strapi CMS (böcker, betyg, sparade böcker, tema)
-├── frontend/         Webbplatsen
-│   ├── welcome.html  Landningssida (visas på startadressen på Netlify via netlify.toml)
-│   ├── index.html    Startsida med böckerna (katalogen)
-│   ├── images/       Foto till landningssidan
-│   ├── user/         Profilsida
-│   ├── components/   Återanvändbara moduler (bokkort, betygsväljare, dialoger, sidfot, formulärfel)
-│   ├── style/        SCSS i partials (tokens, base, header, books, modal, profile, footer)
-│   ├── api.js        Anrop mot Strapi (och demoläge)
-│   ├── theme.js      Årstidsteman (vår, sommar, höst)
-│   └── demo/         Bokdata och omslag för demon
-└── netlify.toml      Netlify-inställningar
+bokshoppen-strapi/
+├── backend/            Strapi CMS (böcker, betyg, sparade böcker, tema)
+├── frontend/           Webbplatsen
+│   ├── welcome.html    Landningssida
+│   ├── index.html      Katalogen med månadens böcker
+│   ├── index.js        Logik för katalogen
+│   ├── login.js        Inloggning, registrering och användarknappar i sidhuvudet
+│   ├── api.js          Anrop mot Strapi och demoläge
+│   ├── theme.js        Årstidsteman
+│   ├── dom.js          Hjälpfunktion för att säkert bygga HTML-element
+│   ├── toast.js        Gemensamma inställningar för notiser
+│   ├── user/           Profilsidan (HTML och logik)
+│   ├── components/     Återanvändbara delar (bokkort, betyg, dialoger, ikoner, sidfot, formulärfel)
+│   ├── style/          SCSS uppdelat i flera filer, kompileras till style.css
+│   ├── images/         Foto till landningssidan
+│   └── demo/           Bokdata och omslag för demon
+└── netlify.toml        Netlify-inställningar (visar landningssidan på startadressen)
 ```
