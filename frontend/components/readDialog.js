@@ -14,22 +14,26 @@ const build = () => {
   const closeButton = el("button", "close", "×", { type: "button", "aria-label": "Stäng" });
   const text = el("p", "modal-sub", null, { id: "read-text" });
   const ratingSlot = el("div");
+  const error = el("p", "field-error", "Välj ett betyg först.", { id: "read-error", hidden: "" });
   const cancelButton = el("button", "btn", "Avbryt", { type: "button" });
+  const saveButton = el("button", "btn btn-primary", "Spara", { type: "button" });
   const actions = el("div", "confirm-actions");
 
-  actions.append(cancelButton);
-  inner.append(closeButton, el("h2", null, "Vad tyckte du?", { id: "read-title" }), text, ratingSlot, actions);
+  actions.append(cancelButton, saveButton);
+  inner.append(closeButton, el("h2", null, "Vad tyckte du?", { id: "read-title" }), text, ratingSlot, error, actions);
   dialog.append(inner);
   document.body.append(dialog);
 
   closeOnBackdropClick(dialog);
   [closeButton, cancelButton].forEach((button) => button.addEventListener("click", () => closeModal(dialog)));
 
-  return { dialog, text, ratingSlot };
+  const built = { dialog, text, ratingSlot, error, saveButton, onSave: null };
+  saveButton.addEventListener("click", () => built.onSave?.());
+  return built;
 };
 
 /**
- * Öppnar dialogen för en bok.
+ * Öppnar dialogen för en bok. Inget sparas eller flyttas förrän användaren trycker på Spara.
  *
  * @param {object} options
  * @param {object} options.book            Boken som markeras som läst (behöver documentId)
@@ -40,12 +44,31 @@ const build = () => {
  */
 export const openReadDialog = ({ book, userId, wishlistItem = null, text, onDone }) => {
   parts ??= build();
-  const { dialog, text: textEl, ratingSlot } = parts;
+  const { dialog, text: textEl, ratingSlot, error, saveButton } = parts;
   textEl.textContent = text;
+  error.hidden = true;
+  saveButton.disabled = false;
 
-  const picker = createRatingSelect(null, async (rating) => {
-    const select = picker.querySelector("select");
-    select.disabled = true; // förhindrar dubbla anrop medan betyget sparas
+  // Rullgardinen bara väljer betyg; sparandet sker först vid klick på Spara.
+  const picker = createRatingSelect(null, () => {
+    error.hidden = true;
+    select.removeAttribute("aria-invalid");
+  });
+  const select = picker.querySelector("select");
+  select.setAttribute("aria-describedby", "read-error");
+
+  parts.onSave = async () => {
+    const rating = parseInt(select.value);
+    if (!rating) {
+      error.hidden = false;
+      select.setAttribute("aria-invalid", "true");
+      select.focus();
+      return;
+    }
+
+    // Låser formuläret medan betyget sparas så att det inte kan skickas två gånger.
+    select.disabled = true;
+    saveButton.disabled = true;
 
     let saved = false;
     try {
@@ -56,7 +79,7 @@ export const openReadDialog = ({ book, userId, wishlistItem = null, text, onDone
     if (!saved) {
       toastr.error("Kunde inte spara betyget, försök igen");
       select.disabled = false;
-      select.value = "";
+      saveButton.disabled = false;
       return;
     }
 
@@ -67,7 +90,7 @@ export const openReadDialog = ({ book, userId, wishlistItem = null, text, onDone
     else toastr.success("Boken är markerad som läst!");
 
     onDone?.({ rating, removed });
-  });
+  };
 
   ratingSlot.replaceChildren(picker);
   openModal(dialog);
