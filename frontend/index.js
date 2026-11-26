@@ -96,7 +96,7 @@ const renderActions = (card, book, user, state) => {
   );
 
   if (state.wishlistItem) {
-    container.replaceChildren(statusText("Sparad"), readButton);
+    container.replaceChildren(statusText("Sparad bok"), readButton);
     return;
   }
 
