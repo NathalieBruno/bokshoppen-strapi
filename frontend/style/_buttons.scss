@@ -75,10 +75,22 @@
   }
 }
 
-// Tyst knapp utan kant ("Jag har läst boken")
-.btn-quiet {
+// Textåtgärd: understruken, färgad text utan fyllning eller kant. Känns klickbar men inte som en yta.
+.btn-text {
   border-color: transparent;
   font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+
+  &:hover {
+    background: transparent;
+    text-decoration-thickness: 2px;
+  }
+}
+
+.btn-text--danger {
+  color: var(--danger);
 }
 
 @media (max-width: 40rem) {

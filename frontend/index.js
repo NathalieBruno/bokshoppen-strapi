@@ -35,7 +35,7 @@ const buildCard = async (book) => {
     return createBookCard(book, { loggedIn: false, rating: { label: "Snittbetyg", value: avgRating }, ratingSection: null, actions: [] });
   }
 
-  // En bok är antingen läst (betygsatt) eller sparad ("Läs senare"). Kortets knappar följer det tillståndet.
+  // En bok är antingen läst (betygsatt) eller sparad ("Spara bok"). Kortets knappar följer det tillståndet.
   const state = { rating: userRating?.rating ?? null, wishlistItem };
   const card = createBookCard(book, { rating: { label: "Snittbetyg", value: avgRating }, actions: [] });
   // Alla kort har samma åtgärdsyta (två rader), så primärknapp och statusplatta hamnar på samma höjd.
@@ -52,12 +52,8 @@ const bookButton = (className, label, book, onClick, icon) => {
   return button;
 };
 
-// Statusplatta i stället för knapp (samma plats som primärknappen).
-const statusPlate = (...content) => {
-  const plate = el("p", "card-plate", null, { tabindex: "-1" });
-  plate.append(...content);
-  return plate;
-};
+// Status som ren, centrerad text (inte en knapp) på primärknappens plats. tabindex -1 låter oss flytta fokus hit.
+const statusText = (text) => el("p", "card-status", text, { tabindex: "-1" });
 
 const renderActions = (card, book, user, state) => {
   const container = card.querySelector(".button-container");
@@ -70,12 +66,13 @@ const renderActions = (card, book, user, state) => {
   // Statusikonen vid titeln: bokmärke för sparad, bock för läst, ingen ikon för övriga.
   setBookStatus(card, book, state.rating ? "read" : state.wishlistItem ? "saved" : undefined);
 
+  // Eget betyg visas bara under Min profil, inte i katalogen.
   if (state.rating) {
-    container.replaceChildren(statusPlate("Läst · ditt betyg ", el("b", null, `${state.rating}/10`)));
+    container.replaceChildren(statusText("Läst"));
     return;
   }
 
-  const readButton = bookButton("btn-quiet", "Jag har läst boken", book, () =>
+  const readButton = bookButton("btn-text", "Jag har läst boken", book, () =>
     openReadDialog({
       book,
       userId: user.documentId,
@@ -91,13 +88,13 @@ const renderActions = (card, book, user, state) => {
   );
 
   if (state.wishlistItem) {
-    container.replaceChildren(statusPlate("Sparad"), readButton);
+    container.replaceChildren(statusText("Sparad"), readButton);
     return;
   }
 
   const saveButton = bookButton(
     "btn-primary",
-    "Läs senare",
+    "Spara bok",
     book,
     async () => {
       saveButton.disabled = true;
@@ -106,7 +103,7 @@ const renderActions = (card, book, user, state) => {
         saveButton.disabled = false;
         return toastr.error("Kunde inte spara boken, försök igen");
       }
-      toastr.success("Boken tillagd");
+      toastr.success("Boken är sparad");
       state.wishlistItem = item;
       rerender();
     },

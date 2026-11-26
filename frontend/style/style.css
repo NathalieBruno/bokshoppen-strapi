@@ -10,7 +10,6 @@
   --focus: #1b3b8f;
   --green: #35563f;
   --green-dark: #2a4533;
-  --green-tint: #e6eee8;
   --star: #9a4a1c;
   --danger: #a32a1e;
   --danger-dark: #831f15;
@@ -254,9 +253,20 @@ a {
   height: 1.0625rem;
 }
 
-.btn-quiet {
+.btn-text {
   border-color: transparent;
   font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.btn-text:hover {
+  background: transparent;
+  text-decoration-thickness: 2px;
+}
+
+.btn-text--danger {
+  color: var(--danger);
 }
 
 @media (max-width: 40rem) {
@@ -440,24 +450,14 @@ a {
   min-height: 5.9375rem;
 }
 
-.card-plate {
+.card-status {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
   min-height: 2.5rem;
-  padding: 0.375rem 0.875rem;
-  border-radius: 10px;
-  background: var(--green-tint);
-  color: var(--green-dark);
   font-size: 0.9375rem;
   font-weight: 500;
-}
-.card-plate b {
-  font-family: var(--font-display);
-  font-size: 1.1875rem;
-  font-weight: 600;
-  line-height: 1;
+  color: var(--green);
 }
 
 .rating-section {
