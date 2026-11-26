@@ -1,8 +1,9 @@
 import { Api } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
+import { el } from "./dom.js";
 import { createBookCard, renderAvgRating } from "./components/bookCard.js";
-import { createRatingSelect } from "./components/ratingSelect.js";
+import { openReadDialog } from "./components/readDialog.js";
 
 await Api.isLoggedIn();
 
@@ -22,51 +23,75 @@ const buildCard = async (book) => {
   const user = isLoggedIn ? JSON.parse(sessionStorage.getItem("user")) : null;
 
   // Alla anrop för kortet startas samtidigt i stället för ett i taget.
-  const [avgRating, userRating, alreadyInWishlist] = await Promise.all([
+  const [avgRating, userRating, wishlistItem] = await Promise.all([
     Api.getBookRating(book.documentId),
     isLoggedIn ? Api.getUserBookRating(user.documentId, book.documentId) : null,
-    isLoggedIn ? Api.checkWishlist(user.documentId, book.documentId) : false,
+    isLoggedIn ? Api.getWishlistItem(user.documentId, book.documentId) : null,
   ]);
 
   if (!isLoggedIn) {
     return createBookCard(book, { loggedIn: false, avgRating, ratingSection: null, actions: [] });
   }
 
-  const card = createBookCard(book, {
-    avgRating,
-    ratingSection: createRatingSelect(userRating?.rating, async (rating) => {
-      const success = await Api.rateBook(user.documentId, book.documentId, rating);
-      if (!success) return toastr.error("Kunde inte spara betyg");
-      toastr.success("Betyg sparat!");
-      const newAvgRating = await Api.getBookRating(book.documentId);
-      renderAvgRating(card.querySelector(".book-rating"), newAvgRating);
-    }),
-    actions: [createWishlistButton(alreadyInWishlist, () => Api.addToWishlist(user.documentId, book.documentId))],
-  });
+  // En bok är antingen läst (betygsatt) eller sparad ("Läs senare"). Kortets knappar följer det tillståndet.
+  const state = { rating: userRating?.rating ?? null, wishlistItem };
+  const card = createBookCard(book, { avgRating, actions: [] });
+  renderActions(card, book, user, state);
   return card;
 };
 
-const createWishlistButton = (alreadyInWishlist, onAdd) => {
-  const button = document.createElement("button");
-  const markSaved = () => {
-    button.textContent = "Boken är sparad";
-    button.disabled = true;
-    button.className = "btn btn-block is-saved";
+const bookButton = (className, label, book, onClick) => {
+  const button = el("button", className, label, { type: "button" });
+  button.append(el("span", "sr-only", `: ${book.title}`));
+  button.addEventListener("click", onClick);
+  return button;
+};
+
+const renderActions = (card, book, user, state) => {
+  const container = card.querySelector(".button-container");
+  const rerender = () => {
+    renderActions(card, book, user, state);
+    // Knappen som användes har ersatts, så fokus flyttas till kortets första element i stället för att försvinna.
+    container.firstElementChild?.focus();
   };
 
-  if (alreadyInWishlist) {
-    markSaved();
-  } else {
-    button.textContent = "Läs senare";
-    button.className = "btn btn-primary btn-block";
-    button.addEventListener("click", async () => {
-      if (await onAdd()) {
-        toastr.success("Boken tillagd");
-        markSaved();
-      }
-    });
+  if (state.rating) {
+    container.replaceChildren(el("p", "card-status", `Läst · ditt betyg ${state.rating}`, { tabindex: "-1" }));
+    return;
   }
-  return button;
+
+  const readButton = bookButton("btn btn-block", "Jag har läst boken", book, () =>
+    openReadDialog({
+      book,
+      userId: user.documentId,
+      wishlistItem: state.wishlistItem,
+      text: `Betygsätt ”${book.title}” så markeras den som läst.`,
+      onDone: async ({ rating, removed }) => {
+        state.rating = rating;
+        if (removed) state.wishlistItem = null;
+        rerender();
+        renderAvgRating(card.querySelector(".book-rating"), await Api.getBookRating(book.documentId));
+      },
+    })
+  );
+
+  if (state.wishlistItem) {
+    container.replaceChildren(el("p", "card-status", "Sparad", { tabindex: "-1" }), readButton);
+    return;
+  }
+
+  const saveButton = bookButton("btn btn-primary btn-block", "Läs senare", book, async () => {
+    saveButton.disabled = true;
+    const item = await Api.addToWishlist(user.documentId, book.documentId);
+    if (!item) {
+      saveButton.disabled = false;
+      return toastr.error("Kunde inte spara boken, försök igen");
+    }
+    toastr.success("Boken tillagd");
+    state.wishlistItem = item;
+    rerender();
+  });
+  container.replaceChildren(saveButton, readButton);
 };
 
 document.addEventListener("DOMContentLoaded", () => {

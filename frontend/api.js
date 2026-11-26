@@ -147,20 +147,23 @@ export class Api {
     return response.data;
   }
 
+  // Returnerar den skapade posten (med documentId, som behövs för att ta bort den igen) eller false.
   static async addToWishlist(userId, bookId) {
     if (DEMO_MODE) {
       const store = readDemoStore();
-      if (!store.wishlist.some((w) => w.book === bookId)) {
-        store.wishlist.push({ documentId: `demo-wishlist-${bookId}`, book: bookId });
+      let item = store.wishlist.find((w) => w.book === bookId);
+      if (!item) {
+        item = { documentId: `demo-wishlist-${bookId}`, book: bookId };
+        store.wishlist.push(item);
         writeDemoStore(store);
       }
-      return true;
+      return item;
     }
     try {
       const token = this.getAuthHeader();
       if (!token) return false;
 
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/wishlists`,
         {
           data: {
@@ -174,21 +177,22 @@ export class Api {
           },
         }
       );
-      return true;
+      return response.data.data;
     } catch (err) {
       console.error("Fel vid tillägg av bok:", err);
       return false;
     }
   }
 
-  static async checkWishlist(documentId, bookId) {
-    if (DEMO_MODE) return readDemoStore().wishlist.some((w) => w.book === bookId);
+  // Bokens post bland användarens sparade böcker (eller null). documentId behövs för att ta bort den.
+  static async getWishlistItem(userId, bookId) {
+    if (DEMO_MODE) return readDemoStore().wishlist.find((w) => w.book === bookId) || null;
     try {
       const token = this.getAuthHeader();
-      if (!token) return false;
+      if (!token) return null;
 
       const response = await axios.get(
-        `${API_URL}/wishlists?filters[user][documentId][$eq]=${documentId}&filters[book][documentId][$eq]=${bookId}`,
+        `${API_URL}/wishlists?filters[user][documentId][$eq]=${userId}&filters[book][documentId][$eq]=${bookId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -196,9 +200,9 @@ export class Api {
         }
       );
 
-      return response.data.data && response.data.data.length > 0;
+      return response.data.data?.[0] || null;
     } catch (err) {
-      return false;
+      return null;
     }
   }
 
