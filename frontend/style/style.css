@@ -297,7 +297,7 @@ a {
 }
 
 .lead {
-  max-width: 38rem;
+  max-width: 44rem;
   margin-top: 1.25rem;
   font-size: 1.1875rem;
   color: var(--muted);
