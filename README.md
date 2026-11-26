@@ -81,7 +81,9 @@ sass frontend/style/style.scss frontend/style/style.css
 book-ducks-uppgift/
 ├── backend/          🗄️ Strapi CMS (böcker, betyg, sparade böcker, tema)
 ├── frontend/         🖥️ Webbplatsen
-│   ├── index.html    🏠 Startsida
+│   ├── welcome.html  🌿 Landningssida (visas på startadressen på Netlify via netlify.toml)
+│   ├── index.html    🏠 Startsida med böckerna (katalogen)
+│   ├── images/       🖼️ Foto till landningssidan
 │   ├── user/         👤 Profilsida
 │   ├── components/   🧩 Återanvändbara moduler (bokkort, betygsväljare, dialoger, sidfot, formulärfel)
 │   ├── style/        🎨 SCSS i partials (tokens, base, header, books, modal, profile, footer)
