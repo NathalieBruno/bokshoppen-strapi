@@ -18,13 +18,14 @@ body.landing {
   align-self: center; // vertikalt centrerad
   padding-block: clamp(1.5rem, 4vw, 3rem);
   padding-right: clamp(1.5rem, 4vw, 4rem);
-  // Samma vänsterkant som loggan i sidhuvudet (innehållet är max 76 rem brett och centrerat)
-  padding-left: max(var(--gutter), calc((100cqw - 76rem) / 2 + var(--gutter)));
+  // Samma vänsterkant som loggan i sidhuvudet (innehållet är max 76 rem brett och centrerat). På mycket breda
+  // skärmar begränsas förskjutningen så att textkolumnen alltid får minst cirka 26 rem.
+  padding-left: max(var(--gutter), min(calc((100cqw - 76rem) / 2 + var(--gutter)), calc(45cqw - 30rem)));
 }
 
 .landing-title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -49,8 +50,9 @@ body.landing {
   margin-top: 1.75rem;
 }
 
-// Fotot fyller hela högerkolumnen: ingen rundning, skugga eller marginal. Det beskärs med object-fit så att
-// boksidorna är kvar i bild, och kolumnen följer textens höjd om fönstret är lågt eller förstorat.
+// Fotot fyller hela högerkolumnen: ingen rundning, skugga eller marginal. Bilden är en bredare version av originalet
+// (väggen och marmorn är förlängda åt sidorna i samma skala, så motivet varken förstorats eller förvrängts). Med
+// object-fit: cover beskärs bara de förlängda sidorna, och hela bokmotivet med luft ovanför och under syns.
 .landing-photo {
   position: relative;
   margin: 0;
@@ -64,7 +66,7 @@ body.landing {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 46%; // lite vägg ovanför bokryggarna
+    object-position: 50% 50%; // motivet är centrerat med luft ovanför och under
   }
 }
 
