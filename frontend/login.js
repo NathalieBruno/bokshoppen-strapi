@@ -26,6 +26,11 @@ function initModals() {
     });
   }
 
+  // Knappar utanför headern (t.ex. på landningssidan) kan öppna inloggningsdialogen med data-open-login.
+  document.querySelectorAll("[data-open-login]").forEach((button) => {
+    button.addEventListener("click", () => openModal(loginModal));
+  });
+
   if (showRegisterLink) {
     showRegisterLink.addEventListener("click", (e) => {
       e.preventDefault();

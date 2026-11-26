@@ -9,7 +9,7 @@ Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan anv
 ## Funktioner
 
 - 📖 Bokkatalog med omslag, författare, sidantal och snittbetyg
-- 🔐 Registrering och inloggning
+- 🔐 Registrering och inloggning, både från landningssidan och från katalogen (samma dialoger)
 - ⭐ Betygsätt böcker (1–10)
 - 🔖 Önskelista med möjlighet att ta bort böcker
 - 🔤 Sortering efter titel, författare och betyg på profilsidan

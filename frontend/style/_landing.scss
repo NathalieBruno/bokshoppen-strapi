@@ -1,26 +1,31 @@
-// Landningssida (welcome.html): delad layout med text till vänster och ett stilla foto till höger.
-// Samma designtokens, knappar och sidhuvud som i resten av sidan.
+// Landningssida (welcome.html): text till vänster och ett stilla foto som fyller högra delen av sidan, från
+// sidhuvudets nederkant till fönstrets nederkant och ut i högerkanten. Samma designtokens, knappar och sidhuvud
+// som i resten av sidan.
 body.landing {
   background: var(--cover-shelf, var(--shelf)); // samma ljusa kräm som hylla, så inget blått syns under heron
 }
 
 .landing-hero {
+  container-type: inline-size; // gör att texten kan linjera med sidhuvudets innehåll (se padding-left nedan)
+  display: grid;
+  grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+  min-height: calc(100vh - 4.8125rem); // fönstrets höjd minus sidhuvudet
+  min-height: calc(100svh - 4.8125rem);
   background: var(--cover-shelf, var(--shelf));
 }
 
-.landing-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  align-items: center;
-  gap: clamp(1.5rem, 5vw, 4rem);
-  min-height: calc(100vh - 4.75rem); // helskärm minus sidhuvudet
-  min-height: calc(100svh - 4.75rem);
+.landing-copy {
+  align-self: center; // vertikalt centrerad
   padding-block: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 4rem);
+  // Samma vänsterkant som loggan i sidhuvudet (innehållet är max 76 rem brett och centrerat). På mycket breda
+  // skärmar begränsas förskjutningen så att textkolumnen alltid får minst cirka 26 rem.
+  padding-left: max(var(--gutter), min(calc((100cqw - 76rem) / 2 + var(--gutter)), calc(45cqw - 30rem)));
 }
 
 .landing-title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -45,40 +50,39 @@ body.landing {
   margin-top: 1.75rem;
 }
 
+// Fotot fyller hela högerkolumnen: ingen rundning, skugga eller marginal. Bilden är en bredare version av originalet
+// (väggen och marmorn är förlängda åt sidorna i samma skala, så motivet varken förstorats eller förvrängts). Med
+// object-fit: cover beskärs bara de förlängda sidorna, och hela bokmotivet med luft ovanför och under syns.
 .landing-photo {
-  justify-self: end;
-  width: min(100%, 32.5rem);
+  position: relative;
   margin: 0;
+  min-height: 16rem;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
-  border-radius: 18px;
-  box-shadow: 0 24px 50px -28px rgba(30, 42, 35, 0.5);
 
   img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 55%;
+    object-position: 50% 50%; // motivet är centrerat med luft ovanför och under
   }
 }
 
-// Mobil: text och knappar först, fotot som ett brett band under
-@media (max-width: 48rem) {
-  .landing-grid {
+// Surfplatta och mobil: text och knappar först, fotot som ett bredare band under, kant i kant
+@media (max-width: 52rem) {
+  .landing-hero {
     grid-template-columns: 1fr;
-    align-content: start;
     min-height: 0;
-    padding-block: 1.5rem 2.5rem;
+  }
+
+  .landing-copy {
+    padding: 1.5rem var(--gutter) 2rem;
   }
 
   .landing-photo {
-    justify-self: stretch;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-
-    img {
-      object-position: 50% 46%; // visar hela boksidorna, inte bara mitten
-    }
+    min-height: 0;
+    aspect-ratio: 3 / 2;
   }
 }
