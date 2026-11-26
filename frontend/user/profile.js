@@ -3,6 +3,7 @@ import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
 import { createBookCard } from "../components/bookCard.js";
+import { createIcon } from "../components/icons.js";
 import { openReadDialog } from "../components/readDialog.js";
 import { closeModal, closeOnBackdropClick, confirmDialog } from "../components/modal.js";
 
@@ -98,6 +99,13 @@ confirmModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
   button.addEventListener("click", () => closeModal(confirmModal));
 });
 
+// Tyst textåtgärd med ikon (t.ex. papperskorg för borttagning). Titeln läggs till som dold text för skärmläsare.
+const textButton = ({ label, icon, bookTitle, danger = false }) => {
+  const button = el("button", `btn btn-compact btn-text${danger ? " btn-text--danger" : ""}`, null, { type: "button" });
+  button.append(createIcon(icon), label, el("span", "sr-only", `: ${bookTitle}`));
+  return button;
+};
+
 // "Jag har läst boken": delad dialog (components/readDialog.js) sparar betyget och tar bort boken ur sparade.
 const markAsRead = (item) => {
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -115,8 +123,7 @@ const createWishlistCard = (item) => {
   readBtn.append(el("span", "sr-only", `: ${item.book.title}`));
   readBtn.addEventListener("click", () => markAsRead(item));
 
-  const removeBtn = el("button", "btn btn-compact btn-danger btn-block", "Ta bort från listan", { type: "button" });
-  removeBtn.append(el("span", "sr-only", `: ${item.book.title}`));
+  const removeBtn = textButton({ label: "Ta bort från listan", icon: "trash", bookTitle: item.book.title, danger: true });
 
   removeBtn.addEventListener("click", async () => {
     const confirmed = await confirmDialog(confirmModal, `”${item.book.title}” tas bort från dina sparade böcker.`);
@@ -138,8 +145,7 @@ const createWishlistCard = (item) => {
 
 const createRatingCard = (item) => {
   const { book, rating } = item;
-  const removeBtn = el("button", "btn btn-compact btn-danger btn-block", "Ta bort boken", { type: "button" });
-  removeBtn.append(el("span", "sr-only", `: ${book.title}`));
+  const removeBtn = textButton({ label: "Ta bort boken", icon: "trash", bookTitle: book.title, danger: true });
 
   removeBtn.addEventListener("click", async () => {
     const confirmed = await confirmDialog(confirmModal, `”${book.title}” tas bort från dina lästa böcker och ditt betyg raderas.`, {
