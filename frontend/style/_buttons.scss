@@ -99,6 +99,7 @@
 // hovring och tangentbordsfokus, så det är tydligt vad som händer precis innan man klickar.
 .btn-text--danger {
   color: var(--danger-muted);
+  font-weight: 400; // tunnare än övriga textåtgärder; kontrasten (6,0:1) klarar AA ändå
 
   &:hover,
   &:focus-visible {

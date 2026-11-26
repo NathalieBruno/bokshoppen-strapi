@@ -277,6 +277,7 @@ a {
 
 .btn-text--danger {
   color: var(--danger-muted);
+  font-weight: 400;
 }
 .btn-text--danger:hover, .btn-text--danger:focus-visible {
   color: var(--danger);
