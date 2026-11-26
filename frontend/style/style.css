@@ -3,6 +3,7 @@
   --bg: #e9f0f2;
   --surface: #fffdf9;
   --shelf: #f3eee4;
+  --cover-shelf: #f5f1e6;
   --line: #d9d5ca;
   --ink: #1e2a23;
   --muted: #56605a;
@@ -23,10 +24,12 @@
 
 :root[data-season=spring] {
   --bg: #eef3e6;
+  --cover-shelf: #f4f3e0;
 }
 
 :root[data-season=autumn] {
   --bg: #f4e8da;
+  --cover-shelf: #f9eedd;
 }
 
 @media (max-width: 40rem) {
@@ -332,7 +335,7 @@ a {
   display: grid;
   place-items: center;
   padding: 1rem 1rem 0.875rem;
-  background: var(--shelf);
+  background: var(--cover-shelf);
 }
 
 .book-cover {

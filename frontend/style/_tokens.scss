@@ -5,7 +5,8 @@
   // Bakgrund (sommar är standard; vår och höst byts via data-season på <html>)
   --bg: #e9f0f2;
   --surface: #fffdf9;
-  --shelf: #f3eee4; // panel bakom bokomslag
+  --shelf: #f3eee4; // panel (t.ex. växlare, hover)
+  --cover-shelf: #f5f1e6; // ljus kräm bakom bokomslag; byter ton per årstid
   --line: #d9d5ca;
 
   // Text och kontroller
@@ -35,10 +36,12 @@
 
 :root[data-season="spring"] {
   --bg: #eef3e6;
+  --cover-shelf: #f4f3e0;
 }
 
 :root[data-season="autumn"] {
   --bg: #f4e8da;
+  --cover-shelf: #f9eedd;
 }
 
 @media (max-width: 40rem) {
