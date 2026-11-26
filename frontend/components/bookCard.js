@@ -51,8 +51,8 @@ export const createBookCard = (book, { loggedIn = true, rating, ratingSection, a
   renderTitle(titleEl, book.title, status);
   info.append(
     titleEl,
-    el("p", "book-author", book.author),
-    el("p", "book-details", `${book.pages} sidor · ${String(book.publicationDate).slice(0, 4)}`)
+    el("p", "book-author", `Av ${book.author}`),
+    el("p", "book-details", `${book.pages} sidor · Utgiven ${String(book.publicationDate).slice(0, 4)}`)
   );
   if (rating) {
     const ratingEl = createRating(rating);
