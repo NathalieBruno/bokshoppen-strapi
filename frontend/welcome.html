@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lilla Bokshoppen – bokklubben där du läser, betygsätter och tipsar</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <meta
       name="description"
       content="Varje månad ett urval böcker för olika smaker. Spara det du vill läsa, betygsätt det du har läst och håll reda på dina favoriter."
@@ -26,7 +30,7 @@
             <span class="brand-name">Lilla Bokshoppen</span>
           </a>
         </div>
-        <a class="btn" href="#main" data-catalog>Logga in</a>
+        <div id="user-controls"></div>
       </div>
     </header>
 
@@ -42,7 +46,7 @@
             </p>
             <div class="landing-actions">
               <a class="btn btn-primary" href="#main" data-catalog>Gå in i bokklubben</a>
-              <a class="btn" href="#main" data-catalog>Logga in</a>
+              <button type="button" class="btn" data-open-login>Logga in</button>
             </div>
           </div>
           <figure class="landing-photo">
@@ -59,6 +63,63 @@
       </section>
     </main>
 
+    <dialog id="login-modal" class="modal" aria-labelledby="login-title">
+      <div class="modal-inner">
+        <button type="button" class="close" aria-label="Stäng">&times;</button>
+        <h2 id="login-title">Logga in</h2>
+        <p class="modal-sub">Välkommen tillbaka till bokklubben.</p>
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="email">E-post</label>
+            <input type="email" id="email" autocomplete="email" required autofocus aria-describedby="email-error"
+              data-error-required="Fyll i din e-postadress." data-error-invalid="Ange en giltig e-postadress." />
+            <p class="field-error" id="email-error" hidden></p>
+          </div>
+          <div class="form-group">
+            <label for="password">Lösenord</label>
+            <input type="password" id="password" autocomplete="current-password" required aria-describedby="password-error"
+              data-error-required="Fyll i ditt lösenord." />
+            <p class="field-error" id="password-error" hidden></p>
+          </div>
+          <p class="forgot-password"><a href="#">Glömt ditt lösenord?</a></p>
+          <button type="submit" class="btn btn-primary btn-block">Logga in</button>
+        </form>
+        <p class="modal-footer">Ny här? <button type="button" class="link-btn" id="show-register">Skapa ett konto</button></p>
+      </div>
+    </dialog>
+
+    <dialog id="register-modal" class="modal" aria-labelledby="register-title">
+      <div class="modal-inner">
+        <button type="button" class="close" aria-label="Stäng">&times;</button>
+        <h2 id="register-title">Skapa konto</h2>
+        <p class="modal-sub">Det tar en minut. Sedan kan du betygsätta och spara böcker.</p>
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label for="register-username">Användarnamn</label>
+            <input type="text" id="register-username" autocomplete="username" required autofocus aria-describedby="register-username-error"
+              data-error-required="Välj ett användarnamn." />
+            <p class="field-error" id="register-username-error" hidden></p>
+          </div>
+          <div class="form-group">
+            <label for="register-email">E-post</label>
+            <input type="email" id="register-email" autocomplete="email" required aria-describedby="register-email-error"
+              data-error-required="Fyll i din e-postadress." data-error-invalid="Ange en giltig e-postadress." />
+            <p class="field-error" id="register-email-error" hidden></p>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Lösenord</label>
+            <input type="password" id="register-password" autocomplete="new-password" required aria-describedby="register-password-error"
+              data-error-required="Välj ett lösenord." />
+            <p class="field-error" id="register-password-error" hidden></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Skapa konto</button>
+        </form>
+        <p class="modal-footer">Har du redan ett konto? <button type="button" class="link-btn" id="show-login">Logga in</button></p>
+      </div>
+    </dialog>
+
+    <script type="module" src="./api.js"></script>
+    <script type="module" src="./login.js"></script>
     <script>
       // Länkarna till katalogen sätts här. Netlify skriver annars om "index.html" i HTML till "/", och "/" är
       // landningssidan, så knapparna skulle bara ladda om den. Parametrar som ?demo=1 följer med.
@@ -67,6 +128,12 @@
       document.querySelectorAll("a[data-catalog]").forEach((link) => {
         link.href = catalogUrl.href;
       });
+
+      // Redan inloggade behöver ingen landningssida: de går direkt till katalogen. Efter en lyckad inloggning eller
+      // registrering laddar login.js om sidan, och då hamnar man också i katalogen.
+      if (sessionStorage.getItem("token")) {
+        window.location.replace(catalogUrl.href);
+      }
     </script>
   </body>
 </html>
