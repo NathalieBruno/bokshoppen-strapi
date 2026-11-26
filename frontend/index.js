@@ -32,7 +32,12 @@ const buildCard = async (book) => {
   ]);
 
   if (!isLoggedIn) {
-    return createBookCard(book, { loggedIn: false, rating: { label: "Snittbetyg", value: avgRating }, ratingSection: null, actions: [] });
+    return createBookCard(book, {
+      loggedIn: false,
+      rating: { label: "Snittbetyg", value: avgRating },
+      ratingSection: null,
+      actions: [],
+    });
   }
 
   // En bok är antingen läst (betygsatt) eller sparad ("Spara bok"). Kortets knappar följer det tillståndet.
@@ -68,7 +73,7 @@ const renderActions = (card, book, user, state) => {
 
   // Eget betyg visas bara under Min profil, inte i katalogen.
   if (state.rating) {
-    container.replaceChildren(statusText("Läst"));
+    container.replaceChildren(statusText("Läst bok"));
     return;
   }
 
@@ -82,9 +87,12 @@ const renderActions = (card, book, user, state) => {
         state.rating = rating;
         if (removed) state.wishlistItem = null;
         rerender();
-        renderRating(card.querySelector(".book-rating"), { label: "Snittbetyg", value: await Api.getBookRating(book.documentId) });
+        renderRating(card.querySelector(".book-rating"), {
+          label: "Snittbetyg",
+          value: await Api.getBookRating(book.documentId),
+        });
       },
-    })
+    }),
   );
 
   if (state.wishlistItem) {
@@ -107,7 +115,7 @@ const renderActions = (card, book, user, state) => {
       state.wishlistItem = item;
       rerender();
     },
-    "bookmark"
+    "bookmark",
   );
   container.replaceChildren(saveButton, readButton);
 };
