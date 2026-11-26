@@ -67,7 +67,7 @@ Strapi startar på `http://localhost:1337`. Första gången skapar du ett admink
 
 Öppna projektmappen i VS Code och starta **Live Server** på `frontend/index.html`.
 
-**3. Ändra stilar (valfritt)**
+**3. Kompilera SCSS (bara vid ändringar i stilarna)**
 
 Stilarna skrivs i `frontend/style/*.scss` och kompileras till `frontend/style/style.css` (som sidorna läser):
 
