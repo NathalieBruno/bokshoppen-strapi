@@ -3,8 +3,8 @@ import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
 import { createBookCard } from "../components/bookCard.js";
-import { createRatingSelect } from "../components/ratingSelect.js";
-import { closeModal, closeOnBackdropClick, confirmDialog, openModal } from "../components/modal.js";
+import { openReadDialog } from "../components/readDialog.js";
+import { closeModal, closeOnBackdropClick, confirmDialog } from "../components/modal.js";
 
 await Api.isLoggedIn();
 
@@ -98,36 +98,16 @@ confirmModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
   button.addEventListener("click", () => closeModal(confirmModal));
 });
 
-// "Jag har läst boken": betyget sparas, boken tas bort från sparade böcker och listorna laddas om.
-const readModal = document.getElementById("read-modal");
-closeOnBackdropClick(readModal);
-readModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
-  button.addEventListener("click", () => closeModal(readModal));
-});
-
+// "Jag har läst boken": delad dialog (components/readDialog.js) sparar betyget och tar bort boken ur sparade.
 const markAsRead = (item) => {
   const user = JSON.parse(sessionStorage.getItem("user"));
-  document.getElementById("read-text").textContent = `Betygsätt ”${item.book.title}” så flyttas den från dina sparade till dina lästa böcker.`;
-  document.getElementById("read-rating").replaceChildren(
-    createRatingSelect(null, async (rating) => {
-      let saved = false;
-      try {
-        saved = await Api.rateBook(user.documentId, item.book.documentId, rating);
-      } catch (err) {
-        console.error("Fel vid sparande av betyg:", err);
-      }
-      if (!saved) {
-        toastr.error("Kunde inte spara betyget, försök igen");
-        return;
-      }
-      const removed = await Api.deleteWishlistItem(item.documentId);
-      closeModal(readModal);
-      if (removed) toastr.success("Boken är flyttad till dina lästa böcker!");
-      else toastr.warning("Betyget sparades, men boken kunde inte tas bort från sparade böcker");
-      await loadBooks();
-    })
-  );
-  openModal(readModal);
+  openReadDialog({
+    book: item.book,
+    userId: user.documentId,
+    wishlistItem: item,
+    text: `Betygsätt ”${item.book.title}” så flyttas den från dina sparade till dina lästa böcker.`,
+    onDone: loadBooks,
+  });
 };
 
 const createWishlistCard = (item) => {
