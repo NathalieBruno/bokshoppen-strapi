@@ -1,12 +1,16 @@
 // Designtokens. All färg, typografi och måttsättning utgår härifrån.
-// Kontrast (WCAG 2.2 AA) är uträknad mot alla tre årstidsbakgrunder:
-//   --ink 12–15:1 · --muted 5,4–6,4:1 · --green 6,8–8,1:1 · --star 5,2–6,1:1 · vit text på --green 8,2:1
+// Textfärgerna klarar WCAG 2.2 AA mot alla tre årstiders bakgrund, kort och sidfot.
 :root {
-  // Bakgrund (sommar är standard; vår och höst byts via data-season på <html>)
-  --bg: #e9f0f2;
+  // Bakgrund: samma kräm som på landningssidan. Sommar är standard; vår och höst byts via data-season på <html>.
+  --bg: var(--cover-shelf);
   --surface: #fffdf9;
   --shelf: #f3eee4; // panel (t.ex. växlare, hover)
-  --cover-shelf: #f8f5ec; // ljus kräm bakom bokomslag; byter ton per årstid
+  --cover-shelf: #f8f5ec; // ljus kräm: sidbakgrund och landningssida; byter ton per årstid
+  --card: #fcfaf7; // varmvita bokkort
+  --card-line: #ddd8ca;
+  --card-divider: #e8e4d9; // mellan omslag och text
+  --season-line: #7b9eab; // årstidsaccent: linje under sidhuvudet och över sidfoten (dekor)
+  --season-wash: #edf0e9; // svag årstidston i sidfoten
   --line: #d9d5ca;
 
   // Text och kontroller
@@ -36,13 +40,15 @@
 }
 
 :root[data-season="spring"] {
-  --bg: #eef3e6;
   --cover-shelf: #f7f6e8;
+  --season-line: #8ba56f;
+  --season-wash: #eef1de;
 }
 
 :root[data-season="autumn"] {
-  --bg: #f4e8da;
   --cover-shelf: #fbf2e4;
+  --season-line: #bd8456;
+  --season-wash: #f6e7d3;
 }
 
 @media (max-width: 40rem) {

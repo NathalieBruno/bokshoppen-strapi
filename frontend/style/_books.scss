@@ -13,9 +13,10 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: var(--card);
+  border: 1px solid var(--card-line);
   border-radius: var(--radius);
+  box-shadow: 0 10px 24px -18px rgba(30, 42, 35, 0.45);
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:hover {
@@ -24,12 +25,11 @@
   }
 }
 
-// Omslaget visas helt, i fast 2:3-proportion, på en ljus "hylla". Inget ligger ovanpå omslaget.
+// Omslaget visas helt, i fast 2:3-proportion, på kortets egen yta. Inget ligger ovanpå omslaget.
 .book-cover-container {
   display: grid;
   place-items: center;
   padding: 1rem 1rem 0.875rem;
-  background: var(--cover-shelf);
 }
 
 .book-cover {
@@ -46,7 +46,9 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 0.875rem 1rem 0.75rem;
+  margin: 0 1rem;
+  padding: 0.875rem 0 0.75rem;
+  border-top: 1px solid var(--card-divider);
 }
 
 // Titeln har en reserverad kant till höger för statusikonen i alla kort, så den bryts likadant oavsett status.
@@ -222,8 +224,12 @@
     max-width: 100%;
   }
 
+  // Omslaget ligger till vänster, så skiljelinjen blir lodrät
   .book-info {
-    padding: 0.875rem 1rem 0.75rem;
+    margin: 0.875rem 0;
+    padding: 0 1rem;
+    border-top: 0;
+    border-left: 1px solid var(--card-divider);
   }
 
   .book-title {

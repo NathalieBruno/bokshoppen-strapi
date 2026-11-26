@@ -13,6 +13,13 @@
   }
 }
 
+// Årstidsaccent under sidhuvudet. Skuggan tar ingen plats, så sidhuvudet är lika högt på alla sidor.
+// Landningssidan har ingen accent.
+body:not(.landing) .site-header {
+  border-bottom-color: var(--season-line);
+  box-shadow: 0 2px 0 var(--season-line);
+}
+
 .brand {
   display: flex;
   align-items: center;

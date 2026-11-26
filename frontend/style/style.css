@@ -1,9 +1,14 @@
 @charset "UTF-8";
 :root {
-  --bg: #e9f0f2;
+  --bg: var(--cover-shelf);
   --surface: #fffdf9;
   --shelf: #f3eee4;
   --cover-shelf: #f8f5ec;
+  --card: #fcfaf7;
+  --card-line: #ddd8ca;
+  --card-divider: #e8e4d9;
+  --season-line: #7b9eab;
+  --season-wash: #edf0e9;
   --line: #d9d5ca;
   --ink: #1e2a23;
   --muted: #56605a;
@@ -24,13 +29,15 @@
 }
 
 :root[data-season=spring] {
-  --bg: #eef3e6;
   --cover-shelf: #f7f6e8;
+  --season-line: #8ba56f;
+  --season-wash: #eef1de;
 }
 
 :root[data-season=autumn] {
-  --bg: #f4e8da;
   --cover-shelf: #fbf2e4;
+  --season-line: #bd8456;
+  --season-wash: #f6e7d3;
 }
 
 @media (max-width: 40rem) {
@@ -50,8 +57,6 @@ body {
   line-height: 1.6;
   color: var(--ink);
   background-color: var(--bg);
-  background-image: radial-gradient(color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px);
-  background-size: 26px 26px;
   transition: background-color 0.3s;
 }
 
@@ -122,6 +127,11 @@ a {
   justify-content: space-between;
   gap: 0.75rem 1.5rem;
   padding-block: 1rem;
+}
+
+body:not(.landing) .site-header {
+  border-bottom-color: var(--season-line);
+  box-shadow: 0 2px 0 var(--season-line);
 }
 
 .brand {
@@ -331,9 +341,10 @@ a {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: var(--card);
+  border: 1px solid var(--card-line);
   border-radius: var(--radius);
+  box-shadow: 0 10px 24px -18px rgba(30, 42, 35, 0.45);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .book-card:hover {
@@ -345,7 +356,6 @@ a {
   display: grid;
   place-items: center;
   padding: 1rem 1rem 0.875rem;
-  background: var(--cover-shelf);
 }
 
 .book-cover {
@@ -362,7 +372,9 @@ a {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 0.875rem 1rem 0.75rem;
+  margin: 0 1rem;
+  padding: 0.875rem 0 0.75rem;
+  border-top: 1px solid var(--card-divider);
 }
 
 .book-title {
@@ -519,7 +531,10 @@ a {
     max-width: 100%;
   }
   .book-info {
-    padding: 0.875rem 1rem 0.75rem;
+    margin: 0.875rem 0;
+    padding: 0 1rem;
+    border-top: 0;
+    border-left: 1px solid var(--card-divider);
   }
   .book-title {
     font-size: 1.1875rem;
@@ -678,9 +693,6 @@ dialog.modal::backdrop {
   border: 1px solid var(--line);
   border-radius: 20px;
 }
-.shelf-section .book-card {
-  background: transparent;
-}
 .shelf-section #wishlist-container,
 .shelf-section #ratings-container {
   padding-bottom: 0;
@@ -823,6 +835,11 @@ main {
   margin-top: auto;
   background: var(--surface);
   border-top: 1px solid var(--line);
+}
+
+body:not(.landing) .site-footer {
+  background: var(--season-wash);
+  border-top-color: var(--season-line);
 }
 
 .footer-main {

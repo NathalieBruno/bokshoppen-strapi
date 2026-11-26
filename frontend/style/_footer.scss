@@ -16,6 +16,11 @@ main {
   border-top: 1px solid var(--line);
 }
 
+body:not(.landing) .site-footer {
+  background: var(--season-wash);
+  border-top-color: var(--season-line);
+}
+
 .footer-main {
   display: grid;
   gap: 2rem 3rem;
