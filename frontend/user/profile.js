@@ -147,6 +147,21 @@ const createRatingCard = (item) => {
   const { book, rating } = item;
   const removeBtn = textButton({ label: "Ta bort boken", icon: "trash", bookTitle: book.title, danger: true });
 
+  // Eget betyg ändras bara här: samma dialog som "Jag har läst boken", med nuvarande betyg förvalt.
+  const editBtn = textButton({ label: "Ändra betyg", icon: "pencil", bookTitle: book.title });
+  editBtn.addEventListener("click", () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    openReadDialog({
+      book,
+      userId: user.documentId,
+      heading: "Ändra betyg",
+      text: `Ändra ditt betyg för ”${book.title}”.`,
+      currentRating: rating,
+      successMessage: "Betyget är uppdaterat!",
+      onDone: loadBooks,
+    });
+  });
+
   removeBtn.addEventListener("click", async () => {
     const confirmed = await confirmDialog(confirmModal, `”${book.title}” tas bort från dina lästa böcker och ditt betyg raderas.`, {
       title: "Ta bort boken?",
@@ -168,7 +183,7 @@ const createRatingCard = (item) => {
   return createBookCard(book, {
     rating: { label: "Ditt betyg", value: rating },
     headingLevel: 3,
-    actions: sessionStorage.getItem("token") ? [removeBtn] : [],
+    actions: sessionStorage.getItem("token") ? [editBtn, removeBtn] : [],
   });
 };
 
