@@ -1,24 +1,7 @@
 import { imageUrl } from "../api.js";
 import { el } from "../dom.js";
 import { createIcon } from "./icons.js";
-
-// Snittbetyg visas med svenskt decimalkomma, t.ex. 7,7.
-const formatRating = (value) => String(value).replace(".", ",");
-
-/**
- * Fyller betygsraden med stjärna och snittbetyg, t.ex. "★ 7,7/10 snittbetyg", eller "Snittbetyg saknas".
- * Används både vid första renderingen och när snittbetyget uppdateras efter en röst.
- * Stjärnan är dekorativ (aria-hidden); texten "snittbetyg" står alltid med.
- */
-export const renderAvgRating = (ratingEl, avgRating) => {
-  if (!(avgRating > 0)) {
-    ratingEl.replaceChildren(el("span", "rating-none", "Snittbetyg saknas"));
-    return;
-  }
-  const text = el("span");
-  text.append(el("b", "rating-value", `${formatRating(avgRating)}/10`), " ", el("span", "rating-suffix", "snittbetyg"));
-  ratingEl.replaceChildren(createIcon("star"), text);
-};
+import { createRating } from "./rating.js";
 
 const STATUS = {
   saved: { icon: "bookmark", label: "sparad" },
@@ -50,15 +33,14 @@ export const setBookStatus = (card, book, status) => renderTitle(card.querySelec
  * @param {object} book                    Bok från API:et (title, author, pages, publicationDate, image)
  * @param {object} [options]
  * @param {boolean} [options.loggedIn]     Styr kortets padding (utrymme för knappar)
- * @param {string|number} [options.avgRating]  Visar raden "Snittbetyg" när värdet skickas in
- * @param {HTMLElement} [options.ratingLine]   Egen betygsrad (t.ex. "Ditt betyg: 8")
+ * @param {{label: string, value: number|string}} [options.rating]  Betygsrad, t.ex. { label: "Snittbetyg", value: 7.7 }
  * @param {HTMLElement|null} [options.ratingSection]  Betygsväljare; null ger en tom behållare
  * @param {HTMLElement[]} [options.actions]    Knappar längst ned; [] ger en tom behållare
  * @param {number} [options.headingLevel]  Nivå på titelrubriken (2 på startsidan, 3 under sektionsrubriker)
  * @param {"saved"|"read"} [options.status]  Statusikon vid titeln (ingen ikon för övriga böcker)
- * @returns {HTMLElement} kortet; betygsraden har klassen .book-rating
+ * @returns {HTMLElement} kortet; betygsraden har klassen .book-rating (uppdateras med renderRating)
  */
-export const createBookCard = (book, { loggedIn = true, avgRating, ratingLine, ratingSection, actions, headingLevel = 2, status } = {}) => {
+export const createBookCard = (book, { loggedIn = true, rating, ratingSection, actions, headingLevel = 2, status } = {}) => {
   const card = el("article", loggedIn ? "book-card logged-in" : "book-card logged-out");
 
   const cover = el("div", "book-cover-container");
@@ -72,12 +54,11 @@ export const createBookCard = (book, { loggedIn = true, avgRating, ratingLine, r
     el("p", "book-author", book.author),
     el("p", "book-details", `${book.pages} sidor · ${String(book.publicationDate).slice(0, 4)}`)
   );
-  if (avgRating !== undefined) {
-    const ratingEl = el("p", "book-rating");
-    renderAvgRating(ratingEl, avgRating);
+  if (rating) {
+    const ratingEl = createRating(rating);
+    ratingEl.classList.add("book-rating");
     info.append(ratingEl);
   }
-  if (ratingLine) info.append(ratingLine);
 
   card.append(cover, info);
 

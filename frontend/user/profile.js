@@ -159,13 +159,11 @@ const createRatingCard = (item) => {
     }
   });
 
-  const ratingLine = el("p", "my-rating");
-  ratingLine.append(
-    el("span", "sr-only", "Ditt betyg: "),
-    el("span", "my-rating-value", String(rating)),
-    el("span", "my-rating-of", "av 10 · ditt betyg")
-  );
-  return createBookCard(book, { ratingLine, headingLevel: 3, actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
+  return createBookCard(book, {
+    rating: { label: "Ditt betyg", value: rating },
+    headingLevel: 3,
+    actions: sessionStorage.getItem("token") ? [removeBtn] : [],
+  });
 };
 
 // Hopfällbara sektioner: knappen i rubriken styr aria-expanded och döljer innehållet.

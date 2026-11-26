@@ -2,7 +2,8 @@ import { Api } from "./api.js";
 import "./toast.js";
 import { applyTheme } from "./theme.js";
 import { el } from "./dom.js";
-import { createBookCard, renderAvgRating, setBookStatus } from "./components/bookCard.js";
+import { createBookCard, setBookStatus } from "./components/bookCard.js";
+import { renderRating } from "./components/rating.js";
 import { createIcon } from "./components/icons.js";
 import { openReadDialog } from "./components/readDialog.js";
 
@@ -31,12 +32,12 @@ const buildCard = async (book) => {
   ]);
 
   if (!isLoggedIn) {
-    return createBookCard(book, { loggedIn: false, avgRating, ratingSection: null, actions: [] });
+    return createBookCard(book, { loggedIn: false, rating: { label: "Snittbetyg", value: avgRating }, ratingSection: null, actions: [] });
   }
 
   // En bok är antingen läst (betygsatt) eller sparad ("Läs senare"). Kortets knappar följer det tillståndet.
   const state = { rating: userRating?.rating ?? null, wishlistItem };
-  const card = createBookCard(book, { avgRating, actions: [] });
+  const card = createBookCard(book, { rating: { label: "Snittbetyg", value: avgRating }, actions: [] });
   // Alla kort har samma åtgärdsyta (två rader), så primärknapp och statusplatta hamnar på samma höjd.
   card.querySelector(".button-container").classList.add("button-container--fixed");
   renderActions(card, book, user, state);
@@ -84,7 +85,7 @@ const renderActions = (card, book, user, state) => {
         state.rating = rating;
         if (removed) state.wishlistItem = null;
         rerender();
-        renderAvgRating(card.querySelector(".book-rating"), await Api.getBookRating(book.documentId));
+        renderRating(card.querySelector(".book-rating"), { label: "Snittbetyg", value: await Api.getBookRating(book.documentId) });
       },
     })
   );
