@@ -301,6 +301,7 @@ a {
   margin-top: 1.25rem;
   font-size: 1.1875rem;
   color: var(--muted);
+  text-wrap: pretty;
 }
 
 #books-container,
