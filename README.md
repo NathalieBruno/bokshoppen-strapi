@@ -4,17 +4,18 @@ En liten bokklubb där du kan bläddra bland månadens böcker, spara dem du vil
 
 🌐 **[Testa live-demon](https://bokshoppen-strapi.netlify.app/)** (inget konto eller installation behövs)
 
+## Om projektet
+
+Projektet började som en skoluppgift om att använda ett **headless CMS** (Strapi) som backend till en egen frontend. Därefter har jag vidareutvecklat det med ny design, återanvändbara komponenter och säkrare hantering av data från API:et.
+
+I Strapi lägger administratören in böcker och väljer årstidstema. Besökare kan skapa konto, spara böcker och sätta betyg.
+
 ![Landningssidan med rubriken Berättelser värda att dela och ett foto av böcker på en marmorhylla](docs/images/landningssida.jpg)
 
 | Katalogen | Min profil |
 | :---: | :---: |
 | ![Katalogen med månadens böcker, med omslag och snittbetyg](docs/images/katalog.jpg) | ![Profilsidan med fyra sparade böcker och sorteringsknappar](docs/images/profil.jpg) |
 
-## Om projektet
-
-Projektet började som en skoluppgift om att använda ett **headless CMS** (Strapi) som backend till en egen frontend. Därefter har jag vidareutvecklat det med ny design, återanvändbara komponenter och säkrare hantering av data från API:et.
-
-I Strapi lägger administratören in böcker och väljer årstidstema. Besökare kan skapa konto, spara böcker och sätta betyg.
 
 ## Funktioner
 
