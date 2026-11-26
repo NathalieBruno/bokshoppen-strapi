@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lilla Bokshoppen – bokklubben där du läser, betygsätter och tipsar</title>
+    <meta
+      name="description"
+      content="Varje månad ett urval böcker för olika smaker. Spara det du vill läsa, betygsätt det du har läst och håll reda på dina favoriter."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap"
+    />
+    <link rel="stylesheet" href="./style/style.css" />
+  </head>
+  <body class="landing">
+    <a class="skip-link" href="#main">Hoppa till innehållet</a>
+    <header class="site-header">
+      <div class="wrap">
+        <div class="brand">
+          <a class="brand-link" href="welcome.html">
+            <svg class="brand-icon" viewBox="3.5 3.5 17 17" aria-hidden="true" focusable="false"><path d="M12 6.5C10.2 5.2 7.8 4.5 4.5 4.5v13c3.3 0 5.7.7 7.5 2 1.8-1.3 4.2-2 7.5-2v-13c-3.3 0-5.7.7-7.5 2z" /><path d="M12 6.5v13" /></svg>
+            <span class="brand-name">Lilla Bokshoppen</span>
+          </a>
+        </div>
+        <a class="btn" href="index.html" data-keep-query>Logga in</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="landing-hero" aria-labelledby="landing-title">
+        <div class="wrap landing-grid">
+          <div class="landing-copy">
+            <p class="eyebrow">Bokklubben · Månadens urval</p>
+            <h1 class="landing-title" id="landing-title">Berättelser värda att <em>dela</em>.</h1>
+            <p class="lead">
+              Varje månad samlar vi ett urval böcker för olika smaker. Spara det du vill läsa, betygsätt det du har
+              läst och håll reda på dina favoriter.
+            </p>
+            <div class="landing-actions">
+              <a class="btn btn-primary" href="index.html" data-keep-query>Gå in i bokklubben</a>
+              <a class="btn" href="index.html" data-keep-query>Logga in</a>
+            </div>
+          </div>
+          <figure class="landing-photo">
+            <img
+              src="images/landing-books-1000.jpg"
+              srcset="images/landing-books-600.jpg 600w, images/landing-books-1000.jpg 1000w"
+              sizes="(max-width: 48rem) 100vw, 520px"
+              width="1000"
+              height="1500"
+              alt="Fem böcker står på rad på en marmorskiva mot en beige vägg."
+            />
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Behåller t.ex. ?demo=1 när man går vidare till katalogen.
+      document.querySelectorAll("a[data-keep-query]").forEach((link) => {
+        link.search = window.location.search;
+      });
+    </script>
+  </body>
+</html>
