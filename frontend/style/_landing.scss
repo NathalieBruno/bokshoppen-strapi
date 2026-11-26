@@ -1,0 +1,84 @@
+// Landningssida (welcome.html): delad layout med text till vänster och ett stilla foto till höger.
+// Samma designtokens, knappar och sidhuvud som i resten av sidan.
+body.landing {
+  background: var(--cover-shelf, var(--shelf)); // samma ljusa kräm som hylla, så inget blått syns under heron
+}
+
+.landing-hero {
+  background: var(--cover-shelf, var(--shelf));
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  min-height: calc(100vh - 4.75rem); // helskärm minus sidhuvudet
+  min-height: calc(100svh - 4.75rem);
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+
+.landing-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+
+  em {
+    font-style: italic;
+    color: var(--star); // ett ord i accentfärg
+  }
+}
+
+.landing-hero .lead {
+  max-width: 30rem;
+  margin-top: 1.25rem;
+  font-size: clamp(1.0625rem, 1.6vw, 1.1875rem);
+}
+
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.landing-photo {
+  justify-self: end;
+  width: min(100%, 32.5rem);
+  margin: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  box-shadow: 0 24px 50px -28px rgba(30, 42, 35, 0.5);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 55%;
+  }
+}
+
+// Mobil: text och knappar först, fotot som ett brett band under
+@media (max-width: 48rem) {
+  .landing-grid {
+    grid-template-columns: 1fr;
+    align-content: start;
+    min-height: 0;
+    padding-block: 1.5rem 2.5rem;
+  }
+
+  .landing-photo {
+    justify-self: stretch;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+
+    img {
+      object-position: 50% 46%; // visar hela boksidorna, inte bara mitten
+    }
+  }
+}
