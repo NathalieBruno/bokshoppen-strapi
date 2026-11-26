@@ -26,7 +26,7 @@
             <span class="brand-name">Lilla Bokshoppen</span>
           </a>
         </div>
-        <a class="btn" href="index.html" data-keep-query>Logga in</a>
+        <a class="btn" href="#main" data-catalog>Logga in</a>
       </div>
     </header>
 
@@ -41,8 +41,8 @@
               läst och håll reda på dina favoriter.
             </p>
             <div class="landing-actions">
-              <a class="btn btn-primary" href="index.html" data-keep-query>Gå in i bokklubben</a>
-              <a class="btn" href="index.html" data-keep-query>Logga in</a>
+              <a class="btn btn-primary" href="#main" data-catalog>Gå in i bokklubben</a>
+              <a class="btn" href="#main" data-catalog>Logga in</a>
             </div>
           </div>
           <figure class="landing-photo">
@@ -60,9 +60,12 @@
     </main>
 
     <script>
-      // Behåller t.ex. ?demo=1 när man går vidare till katalogen.
-      document.querySelectorAll("a[data-keep-query]").forEach((link) => {
-        link.search = window.location.search;
+      // Länkarna till katalogen sätts här. Netlify skriver annars om "index.html" i HTML till "/", och "/" är
+      // landningssidan, så knapparna skulle bara ladda om den. Parametrar som ?demo=1 följer med.
+      const catalogUrl = new URL("index.html", window.location.href);
+      catalogUrl.search = window.location.search;
+      document.querySelectorAll("a[data-catalog]").forEach((link) => {
+        link.href = catalogUrl.href;
       });
     </script>
   </body>
