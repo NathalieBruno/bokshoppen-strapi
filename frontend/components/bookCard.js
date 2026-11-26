@@ -4,12 +4,12 @@ import { createIcon } from "./icons.js";
 import { createRating } from "./rating.js";
 
 const STATUS = {
-  saved: { icon: "bookmark", label: "sparad" },
+  saved: { icon: "bookmark", label: "sparad", filled: true },
   read: { icon: "check", label: "läst" },
 };
 
 /**
- * Fyller titelrubriken: en diskret statusikon till höger på första raden (bara för sparad eller läst)
+ * Fyller titelrubriken: en diskret statusikon till höger på första raden (ifyllt bokmärke för sparad, bock för läst)
  * och bokens titel. Ikonen är dold för skärmläsare; i stället läggs statusen till som dold text efter
  * titeln ("En avlägsen kust (sparad)"). Platsen för ikonen är reserverad i alla kort, så titeln bryts
  * likadant oavsett status.
@@ -18,7 +18,7 @@ const renderTitle = (titleEl, title, status) => {
   const info = STATUS[status];
   titleEl.replaceChildren();
   if (info) titleEl.append(el("span", "status-mark", null, { "aria-hidden": "true" }));
-  if (info) titleEl.firstChild.append(createIcon(info.icon));
+  if (info) titleEl.firstChild.append(createIcon(info.icon, { filled: info.filled }));
   titleEl.append(document.createTextNode(title));
   if (info) titleEl.append(el("span", "sr-only", ` (${info.label})`));
 };

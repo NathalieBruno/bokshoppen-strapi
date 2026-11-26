@@ -12,13 +12,14 @@ const ICONS = {
   pencil: { viewBox: "0 0 24 24", d: "M4 20l1-4L16.5 4.5a2 2 0 013 3L8 19z" },
 };
 
-export const createIcon = (name) => {
+/** @param {string} name  @param {{filled?: boolean}} [options]  filled fyller linjeikonen med sin färg */
+export const createIcon = (name, { filled = false } = {}) => {
   const { viewBox, d, strokeWidth = 2.2 } = ICONS[name];
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", viewBox);
   svg.setAttribute("aria-hidden", "true");
   svg.setAttribute("focusable", "false");
-  svg.setAttribute("fill", "none");
+  svg.setAttribute("fill", filled ? "currentColor" : "none");
   svg.setAttribute("stroke", "currentColor");
   svg.setAttribute("stroke-width", String(strokeWidth));
   svg.setAttribute("stroke-linecap", "round");
