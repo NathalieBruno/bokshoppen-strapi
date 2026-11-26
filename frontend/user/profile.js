@@ -3,6 +3,7 @@ import "../toast.js";
 import { applyTheme } from "../theme.js";
 import { el } from "../dom.js";
 import { createBookCard } from "../components/bookCard.js";
+import { createIcon } from "../components/icons.js";
 import { openReadDialog } from "../components/readDialog.js";
 import { closeModal, closeOnBackdropClick, confirmDialog } from "../components/modal.js";
 
@@ -98,6 +99,13 @@ confirmModal.querySelectorAll(".close, [data-cancel]").forEach((button) => {
   button.addEventListener("click", () => closeModal(confirmModal));
 });
 
+// Tyst textåtgärd med ikon (t.ex. papperskorg för borttagning). Titeln läggs till som dold text för skärmläsare.
+const textButton = ({ label, icon, bookTitle, danger = false }) => {
+  const button = el("button", `btn btn-compact btn-text${danger ? " btn-text--danger" : ""}`, null, { type: "button" });
+  button.append(createIcon(icon), label, el("span", "sr-only", `: ${bookTitle}`));
+  return button;
+};
+
 // "Jag har läst boken": delad dialog (components/readDialog.js) sparar betyget och tar bort boken ur sparade.
 const markAsRead = (item) => {
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -111,12 +119,11 @@ const markAsRead = (item) => {
 };
 
 const createWishlistCard = (item) => {
-  const readBtn = el("button", "btn btn-primary btn-block", "Jag har läst boken", { type: "button" });
+  const readBtn = el("button", "btn btn-compact btn-primary btn-block", "Jag har läst boken", { type: "button" });
   readBtn.append(el("span", "sr-only", `: ${item.book.title}`));
   readBtn.addEventListener("click", () => markAsRead(item));
 
-  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort från listan", { type: "button" });
-  removeBtn.append(el("span", "sr-only", `: ${item.book.title}`));
+  const removeBtn = textButton({ label: "Ta bort från listan", icon: "trash", bookTitle: item.book.title, danger: true });
 
   removeBtn.addEventListener("click", async () => {
     const confirmed = await confirmDialog(confirmModal, `”${item.book.title}” tas bort från dina sparade böcker.`);
@@ -138,8 +145,22 @@ const createWishlistCard = (item) => {
 
 const createRatingCard = (item) => {
   const { book, rating } = item;
-  const removeBtn = el("button", "btn btn-danger btn-block", "Ta bort boken", { type: "button" });
-  removeBtn.append(el("span", "sr-only", `: ${book.title}`));
+  const removeBtn = textButton({ label: "Ta bort boken", icon: "trash", bookTitle: book.title, danger: true });
+
+  // Eget betyg ändras bara här: samma dialog som "Jag har läst boken", med nuvarande betyg förvalt.
+  const editBtn = textButton({ label: "Ändra betyg", icon: "pencil", bookTitle: book.title });
+  editBtn.addEventListener("click", () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    openReadDialog({
+      book,
+      userId: user.documentId,
+      heading: "Ändra betyg",
+      text: `Ändra ditt betyg för ”${book.title}”.`,
+      currentRating: rating,
+      successMessage: "Betyget är uppdaterat!",
+      onDone: loadBooks,
+    });
+  });
 
   removeBtn.addEventListener("click", async () => {
     const confirmed = await confirmDialog(confirmModal, `”${book.title}” tas bort från dina lästa böcker och ditt betyg raderas.`, {
@@ -159,13 +180,11 @@ const createRatingCard = (item) => {
     }
   });
 
-  const ratingLine = el("p", "my-rating");
-  ratingLine.append(
-    el("span", "sr-only", "Ditt betyg: "),
-    el("span", "my-rating-value", String(rating)),
-    el("span", "my-rating-of", "av 10 · ditt betyg")
-  );
-  return createBookCard(book, { ratingLine, headingLevel: 3, actions: sessionStorage.getItem("token") ? [removeBtn] : [] });
+  return createBookCard(book, {
+    rating: { label: "Ditt betyg", value: rating },
+    headingLevel: 3,
+    actions: sessionStorage.getItem("token") ? [editBtn, removeBtn] : [],
+  });
 };
 
 // Hopfällbara sektioner: knappen i rubriken styr aria-expanded och döljer innehållet.

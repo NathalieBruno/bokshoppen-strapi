@@ -19,15 +19,17 @@ const build = () => {
   const saveButton = el("button", "btn btn-primary", "Spara", { type: "button" });
   const actions = el("div", "confirm-actions");
 
+  const heading = el("h2", null, "Vad tyckte du?", { id: "read-title" });
+
   actions.append(cancelButton, saveButton);
-  inner.append(closeButton, el("h2", null, "Vad tyckte du?", { id: "read-title" }), text, ratingSlot, error, actions);
+  inner.append(closeButton, heading, text, ratingSlot, error, actions);
   dialog.append(inner);
   document.body.append(dialog);
 
   closeOnBackdropClick(dialog);
   [closeButton, cancelButton].forEach((button) => button.addEventListener("click", () => closeModal(dialog)));
 
-  const built = { dialog, text, ratingSlot, error, saveButton, onSave: null };
+  const built = { dialog, heading, text, ratingSlot, error, saveButton, onSave: null };
   saveButton.addEventListener("click", () => built.onSave?.());
   return built;
 };
@@ -40,17 +42,21 @@ const build = () => {
  * @param {string} options.userId          Inloggad användares documentId
  * @param {object|null} [options.wishlistItem]  Bokens post bland sparade böcker (tas bort när betyget sparats)
  * @param {string} options.text            Förklarande text under rubriken
+ * @param {string} [options.heading]       Rubrik (standard "Vad tyckte du?")
+ * @param {number|null} [options.currentRating]  Förvalt betyg, t.ex. när ett befintligt betyg ändras
+ * @param {string} [options.successMessage]  Egen bekräftelse efter lyckat sparande
  * @param {Function} [options.onDone]      Anropas efter lyckat betyg med { rating, removed }
  */
-export const openReadDialog = ({ book, userId, wishlistItem = null, text, onDone }) => {
+export const openReadDialog = ({ book, userId, wishlistItem = null, text, heading, currentRating = null, successMessage, onDone }) => {
   parts ??= build();
-  const { dialog, text: textEl, ratingSlot, error, saveButton } = parts;
+  const { dialog, heading: headingEl, text: textEl, ratingSlot, error, saveButton } = parts;
+  headingEl.textContent = heading ?? "Vad tyckte du?";
   textEl.textContent = text;
   error.hidden = true;
   saveButton.disabled = false;
 
   // Rullgardinen bara väljer betyg; sparandet sker först vid klick på Spara.
-  const picker = createRatingSelect(null, () => {
+  const picker = createRatingSelect(currentRating, () => {
     error.hidden = true;
     select.removeAttribute("aria-invalid");
   });
@@ -86,6 +92,7 @@ export const openReadDialog = ({ book, userId, wishlistItem = null, text, onDone
     const removed = wishlistItem ? await Api.deleteWishlistItem(wishlistItem.documentId) : true;
     closeModal(dialog);
     if (!removed) toastr.warning("Betyget sparades, men boken kunde inte tas bort från sparade böcker");
+    else if (successMessage) toastr.success(successMessage);
     else if (wishlistItem) toastr.success("Boken är flyttad till dina lästa böcker!");
     else toastr.success("Boken är markerad som läst!");
 

@@ -3,6 +3,7 @@
   --bg: #e9f0f2;
   --surface: #fffdf9;
   --shelf: #f3eee4;
+  --cover-shelf: #f8f5ec;
   --line: #d9d5ca;
   --ink: #1e2a23;
   --muted: #56605a;
@@ -10,9 +11,11 @@
   --focus: #1b3b8f;
   --green: #35563f;
   --green-dark: #2a4533;
+  --green-tint: #e6eee8;
   --star: #9a4a1c;
   --danger: #a32a1e;
   --danger-dark: #831f15;
+  --danger-muted: #984b40;
   --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --radius: 14px;
@@ -22,10 +25,12 @@
 
 :root[data-season=spring] {
   --bg: #eef3e6;
+  --cover-shelf: #f7f6e8;
 }
 
 :root[data-season=autumn] {
   --bg: #f4e8da;
+  --cover-shelf: #fbf2e4;
 }
 
 @media (max-width: 40rem) {
@@ -240,12 +245,55 @@ a {
   width: 100%;
 }
 
+.btn-compact {
+  min-height: 2.5rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.btn-compact svg {
+  flex: none;
+  width: 1.0625rem;
+  height: 1.0625rem;
+}
+
+.btn-text {
+  border-color: transparent;
+  font-weight: 500;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.btn-text:hover, .btn-text:focus-visible {
+  background: transparent;
+  text-decoration: underline;
+}
+@media (hover: none) {
+  .btn-text {
+    text-decoration: underline;
+  }
+}
+
+.btn-text--danger {
+  color: var(--danger-muted);
+  font-weight: 400;
+}
+.btn-text--danger:hover, .btn-text--danger:focus-visible {
+  color: var(--danger);
+}
+
+@media (max-width: 40rem) {
+  .btn-compact {
+    min-height: 2.75rem;
+  }
+}
 .hero .wrap {
-  padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  padding-block: clamp(1.75rem, 4vw, 2.75rem) clamp(1.25rem, 2.5vw, 2rem);
 }
 
 .eyebrow {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.625rem;
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -256,16 +304,17 @@ a {
 .page-title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  line-height: 1.02;
+  font-size: clamp(2.125rem, 5vw, 3.25rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
 }
 
 .lead {
-  max-width: 38rem;
-  margin-top: 1.25rem;
-  font-size: 1.1875rem;
+  max-width: 56rem;
+  margin-top: 0.875rem;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   color: var(--muted);
+  text-wrap: pretty;
 }
 
 #books-container,
@@ -295,14 +344,14 @@ a {
 .book-cover-container {
   display: grid;
   place-items: center;
-  padding: 1.5rem 1.5rem 1.25rem;
-  background: var(--shelf);
+  padding: 1rem 1rem 0.875rem;
+  background: var(--cover-shelf);
 }
 
 .book-cover {
   display: block;
   width: 100%;
-  max-width: 11rem;
+  max-width: 10rem;
   aspect-ratio: 2/3;
   object-fit: cover;
   border-radius: 3px 6px 6px 3px;
@@ -313,92 +362,120 @@ a {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 1.25rem 1.5rem 1.5rem;
+  padding: 0.875rem 1rem 0.75rem;
 }
 
 .book-title {
+  position: relative;
+  padding-right: 1.5rem;
   font-family: var(--font-display);
-  font-size: 1.4375rem;
+  font-size: 1.375rem;
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.005em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.status-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: 1.15em;
+  color: var(--green);
+}
+.status-mark svg {
+  width: 0.75em;
+  height: 0.75em;
 }
 
 .book-author {
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.35;
   color: var(--muted);
 }
 
 .book-details {
-  margin-top: 0.75rem;
-  font-size: 0.9375rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
   color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
-.book-rating {
+.rating {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-}
-.book-rating svg {
-  flex: none;
-  width: 1.125rem;
-  height: 1.125rem;
-  fill: var(--star);
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-top: 0.75rem;
 }
 
 .rating-label {
+  font-size: 0.8125rem;
+  line-height: 1.3;
   color: var(--muted);
-  font-weight: 400;
 }
 
 .rating-value {
-  color: var(--star);
-}
-
-.rating-none {
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.my-rating {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
-
-.my-rating-value {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 1;
+.rating-value svg {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
   color: var(--star);
 }
 
-.my-rating-of {
-  font-size: 0.9375rem;
+.rating-value--none {
   color: var(--muted);
 }
 
-.rating-section-container,
-.button-container {
-  padding: 0 1.5rem 0.75rem;
+.rating-section-container {
+  padding: 0 1rem 0.75rem;
 }
-.rating-section-container:empty,
-.button-container:empty {
+.rating-section-container:empty {
   display: none;
 }
 
 .button-container {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  margin: 0 1rem 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+.button-container:empty {
+  display: none;
+}
+
+.button-container--fixed {
+  gap: 0.125rem;
+  min-height: 5.9375rem;
+}
+
+.card-status {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding-bottom: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 10px;
+  background: var(--green-tint);
+  color: var(--green-dark);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: default;
 }
 
 .rating-section {
@@ -422,10 +499,6 @@ a {
   border-radius: 10px;
 }
 
-.is-saved::before {
-  content: "✓ "/"";
-}
-
 @media (max-width: 40rem) {
   #books-container,
   #wishlist-container,
@@ -440,22 +513,23 @@ a {
   }
   .book-cover-container {
     align-items: start;
-    padding: 1rem;
+    padding: 0.875rem 0.75rem;
+  }
+  .book-cover {
+    max-width: 100%;
   }
   .book-info {
-    padding: 1rem 1rem 1.25rem 1.25rem;
+    padding: 0.875rem 1rem 0.75rem;
   }
   .book-title {
-    font-size: 1.3125rem;
-    overflow-wrap: anywhere;
+    font-size: 1.1875rem;
   }
   .rating-section-container,
   .button-container {
     grid-column: 1/-1;
-    padding: 1rem 1rem 0.75rem;
   }
-  .button-container {
-    padding-bottom: 1.25rem;
+  .button-container--fixed {
+    min-height: 0;
   }
 }
 dialog.modal {

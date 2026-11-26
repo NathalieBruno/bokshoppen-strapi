@@ -5,7 +5,8 @@
   // Bakgrund (sommar är standard; vår och höst byts via data-season på <html>)
   --bg: #e9f0f2;
   --surface: #fffdf9;
-  --shelf: #f3eee4; // panel bakom bokomslag
+  --shelf: #f3eee4; // panel (t.ex. växlare, hover)
+  --cover-shelf: #f8f5ec; // ljus kräm bakom bokomslag; byter ton per årstid
   --line: #d9d5ca;
 
   // Text och kontroller
@@ -17,9 +18,11 @@
   // Accenter
   --green: #35563f;
   --green-dark: #2a4533;
+  --green-tint: #e6eee8; // ljusgrön yta (statusytor)
   --star: #9a4a1c; // betyg
   --danger: #a32a1e;
   --danger-dark: #831f15;
+  --danger-muted: #984b40; // dämpad tegelröd för tysta borttagningsåtgärder (6,0:1 mot kortet)
 
   // Typografi
   --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
@@ -34,10 +37,12 @@
 
 :root[data-season="spring"] {
   --bg: #eef3e6;
+  --cover-shelf: #f7f6e8;
 }
 
 :root[data-season="autumn"] {
   --bg: #f4e8da;
+  --cover-shelf: #fbf2e4;
 }
 
 @media (max-width: 40rem) {

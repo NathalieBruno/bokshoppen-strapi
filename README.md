@@ -13,7 +13,7 @@ Projektet är en skoluppgift som visar hur ett **headless CMS** (Strapi) kan anv
 - ⭐ Betygsätt böcker (1–10)
 - 🔖 Önskelista med möjlighet att ta bort böcker
 - 🔤 Sortering efter titel, författare och betyg på profilsidan
-- ✅ Markera en sparad bok som läst (den betygsätts och flyttas till dina lästa och betygsatta böcker) och ta bort den därifrån igen (betyget raderas)
+- ✅ **Jag har läst boken** finns både på startsidan och i dina sparade böcker: du väljer betyg i en dialog och trycker på Spara, så hamnar boken bland dina lästa och betygsatta böcker. En bok är antingen sparad (Spara bok) eller läst, aldrig båda. Startsidan visar bara snittbetyget. Ditt eget betyg visas, ändras (**Ändra betyg**) och tas bort under Min profil.
 - 🎨 Tre teman (vår, sommar, höst)
 
 ## Tech stack
@@ -33,7 +33,7 @@ Samma frontend kan köras på två sätt:
 | ------------------------ | ------------------------------------- | ------------------------------------------------------------------ |
 | **Data**                 | Hämtas från Strapi (`localhost:1337`) | Fast katalog med 12 böcker i `frontend/demo/`                      |
 | **Böcker och tema**      | Ändras av administratören i Strapi    | Böckerna är fasta, temat byter besökaren själv längst ned på sidan |
-| **Konto**                | Riktig registrering och inloggning    | Knappen **Try demo account**                                       |
+| **Konto**                | Riktig registrering och inloggning    | Knappen **Prova demokontot**                                       |
 | **Betyg och sparade böcker** | Sparas i Strapi                       | Sparas bara i din egen webbläsare                                  |
 
 Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du det med `?demo=1` (demo utan Strapi) eller `?demo=0` (tvinga Strapi). Inställningar för Netlify finns i `netlify.toml`.
@@ -43,8 +43,8 @@ Demoläget slås på automatiskt när sidan inte körs lokalt. Lokalt styr du de
 🌐 **Live demo:** [bokshoppen-strapi.netlify.app](https://bokshoppen-strapi.netlify.app/)
 
 1. 🔑 Klicka på **Logga in** och sedan **Try demo account** – du behöver inga uppgifter.
-2. ⭐ Betygsätt en bok i listan.
-3. 🔖 Klicka på **Läs senare** för att spara en bok.
+2. ⭐ Klicka på **Jag har läst boken** på en bok, välj ett betyg och tryck **Spara**.
+3. 🔖 Klicka på **Spara bok** för att spara en bok.
 4. 👤 Öppna **Min profil** och prova att sortera dina sparade böcker och dina betyg.
 5. 🎨 Byt tema längst ned på sidan (**Vår**, **Sommar**, **Höst**).
 
